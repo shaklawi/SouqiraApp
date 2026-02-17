@@ -1,0 +1,540 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0715302CEC6F7C0827ED3ECF /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D28C5C3BB25D05B490CAF23 /* AppSettings.swift */; };
+		1B405472118A319B396B07F5 /* MockDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F67AD1C53558B1EA4B645D /* MockDataService.swift */; };
+		21342BB275A558F1FB342061 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9889476040294F74D38C01 /* APIService.swift */; };
+		24E3E2F0D0A6F833F0C7FF98 /* CitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2B571E7FDA9CEF31780ADD /* CitiesView.swift */; };
+		2A97B1606950C024B0E7759A /* MessageComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C9C88CC6B86763B9B542DB /* MessageComposerView.swift */; };
+		2F461F4F4F4FFE11AC154491 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D250A303F831A4CAB452C34B /* ProfileView.swift */; };
+		360731DC3C2F4CF17866E909 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A9BAE64BDE376FC9C4B68B /* AuthenticationViewModel.swift */; };
+		3AC8E40A857169914E94D811 /* MessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DFA6D85E8C535CA4B00923 /* MessagesViewModel.swift */; };
+		44D7DE450AEE7FA4C539AF2D /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D260B991AA40ADBAA8EFFCF /* FavoritesView.swift */; };
+		467A32737B04551CC930CCD6 /* ListingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2EC118341A705438AF4547 /* ListingCard.swift */; };
+		46C6D73C54F0DC82A9B81A9D /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E231120F09FA43BA52069 /* Category.swift */; };
+		57444E5BD3C067076E47847A /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4642A7197EE3DEBBEE6F61 /* AuthenticationView.swift */; };
+		5FB78EEA464A48DCFF365219 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37DAF9BCD8C219B53D461D2C /* User.swift */; };
+		77356425705472FA5BA91DB6 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F0853B91B3C628634CEE3D2 /* NetworkManager.swift */; };
+		7E9D32A03FC21D68C59A9183 /* SettingsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A27A3695A35228FF24E8CE /* SettingsSheet.swift */; };
+		813F757B54A2E1DD52D49CFD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866913F181357A61148CBE69 /* ContentView.swift */; };
+		82AAEED6FCB43C0919EBA6B4 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D631E56FA6A66A366C10E74 /* Message.swift */; };
+		98F4B52414B57C9F4819FBD8 /* ConversationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0BCDC23FD171338EDF07FA /* ConversationsView.swift */; };
+		9A2B8435D2BBCE4BEA8A7159 /* BusinessListing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6529E535A53531698E4C0D /* BusinessListing.swift */; };
+		9F0FA74FE6459A413EEF6A2F /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F9834630B21F618C34055C /* LocalizationManager.swift */; };
+		A128C6130BA6F4CD7D6E682C /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3695939F61FD201FE7A335C9 /* FilterView.swift */; };
+		A887DBA85ABEA0B0BB7947F6 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E87F1D8461F99D1F62DACE2 /* HomeView.swift */; };
+		BF55A73F0A19EE4C6A9C6246 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29E5DFAD228FF9296AEA9159 /* Assets.xcassets */; };
+		C25743E76D92B19F3C67368C /* CreateListingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB9B97B5B06509755FF7E94 /* CreateListingView.swift */; };
+		CEDBEC1C13A61F2ADA1ACEAA /* ListingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C0D03B2435A0B77D6096A9 /* ListingDetailView.swift */; };
+		DB3B75BBCF5B09A9FEEA8AC8 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82902FF000955D89C8F49D0E /* MainTabView.swift */; };
+		E1D9252A03A36004B69F162A /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B552C6800F7EA44CA4E5BEFD /* ChatView.swift */; };
+		F130340DD6C337714E9C6EE7 /* SouqiraApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5B803A6C005BAF414AF628D /* SouqiraApp.swift */; };
+		F921EA7623A45DFBDFF7C33A /* LocalizedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEA39224A7806453D22678B8 /* LocalizedText.swift */; };
+		FBF7E6E6FBB75A7E7DB61D9A /* ListingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF2BC87DF4DC14A5CD58AA7 /* ListingsViewModel.swift */; };
+		FCEF76C4C71FCA6E8E06A127 /* Pods_Souqira.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 205900F59A275C559ACA35B1 /* Pods_Souqira.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		07A31D65E851F7E49319DB87 /* Souqira.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Souqira.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0F0853B91B3C628634CEE3D2 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		16C0D03B2435A0B77D6096A9 /* ListingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingDetailView.swift; sourceTree = "<group>"; };
+		205900F59A275C559ACA35B1 /* Pods_Souqira.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Souqira.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		29E5DFAD228FF9296AEA9159 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2A4642A7197EE3DEBBEE6F61 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
+		2E87F1D8461F99D1F62DACE2 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		3695939F61FD201FE7A335C9 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
+		37DAF9BCD8C219B53D461D2C /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		3A9889476040294F74D38C01 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		3D28C5C3BB25D05B490CAF23 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		3E6529E535A53531698E4C0D /* BusinessListing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessListing.swift; sourceTree = "<group>"; };
+		4D2EC118341A705438AF4547 /* ListingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingCard.swift; sourceTree = "<group>"; };
+		4D631E56FA6A66A366C10E74 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		4E0BCDC23FD171338EDF07FA /* ConversationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsView.swift; sourceTree = "<group>"; };
+		50A27A3695A35228FF24E8CE /* SettingsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSheet.swift; sourceTree = "<group>"; };
+		64DFA6D85E8C535CA4B00923 /* MessagesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewModel.swift; sourceTree = "<group>"; };
+		72F67AD1C53558B1EA4B645D /* MockDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataService.swift; sourceTree = "<group>"; };
+		7F2B571E7FDA9CEF31780ADD /* CitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitiesView.swift; sourceTree = "<group>"; };
+		82902FF000955D89C8F49D0E /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		866913F181357A61148CBE69 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		8BB9B97B5B06509755FF7E94 /* CreateListingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateListingView.swift; sourceTree = "<group>"; };
+		8D260B991AA40ADBAA8EFFCF /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
+		93F9834630B21F618C34055C /* LocalizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
+		95C9C88CC6B86763B9B542DB /* MessageComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageComposerView.swift; sourceTree = "<group>"; };
+		A0476AAD9F562C40B6459B9F /* Pods-Souqira.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Souqira.release.xcconfig"; path = "Target Support Files/Pods-Souqira/Pods-Souqira.release.xcconfig"; sourceTree = "<group>"; };
+		A04E231120F09FA43BA52069 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		A5A9BAE64BDE376FC9C4B68B /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
+		AC5F6E1CE3A3102674B49F39 /* Pods-Souqira.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Souqira.debug.xcconfig"; path = "Target Support Files/Pods-Souqira/Pods-Souqira.debug.xcconfig"; sourceTree = "<group>"; };
+		B552C6800F7EA44CA4E5BEFD /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		C9520192AF4C301D15758FAA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D250A303F831A4CAB452C34B /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		D5B803A6C005BAF414AF628D /* SouqiraApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SouqiraApp.swift; sourceTree = "<group>"; };
+		DEA39224A7806453D22678B8 /* LocalizedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedText.swift; sourceTree = "<group>"; };
+		FAF2BC87DF4DC14A5CD58AA7 /* ListingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingsViewModel.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E1EA4E0693AEA035526BE874 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FCEF76C4C71FCA6E8E06A127 /* Pods_Souqira.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		18832DCC8E95A79EC18F3D3D /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				4D2EC118341A705438AF4547 /* ListingCard.swift */,
+				DEA39224A7806453D22678B8 /* LocalizedText.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		1A02525D17414771268A0F2E = {
+			isa = PBXGroup;
+			children = (
+				F30B822D40B82B699CCE65C0 /* SouqiraApp */,
+				A5CB4D445B07D9F97AD49363 /* Products */,
+				8683A09317CB6BEB0A5A2767 /* Pods */,
+				C3C8A4AA79C9FDA87B7C2DBA /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		28448E191A320F978A35C9FE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2A4642A7197EE3DEBBEE6F61 /* AuthenticationView.swift */,
+				B552C6800F7EA44CA4E5BEFD /* ChatView.swift */,
+				7F2B571E7FDA9CEF31780ADD /* CitiesView.swift */,
+				4E0BCDC23FD171338EDF07FA /* ConversationsView.swift */,
+				8BB9B97B5B06509755FF7E94 /* CreateListingView.swift */,
+				8D260B991AA40ADBAA8EFFCF /* FavoritesView.swift */,
+				3695939F61FD201FE7A335C9 /* FilterView.swift */,
+				2E87F1D8461F99D1F62DACE2 /* HomeView.swift */,
+				16C0D03B2435A0B77D6096A9 /* ListingDetailView.swift */,
+				82902FF000955D89C8F49D0E /* MainTabView.swift */,
+				95C9C88CC6B86763B9B542DB /* MessageComposerView.swift */,
+				D250A303F831A4CAB452C34B /* ProfileView.swift */,
+				50A27A3695A35228FF24E8CE /* SettingsSheet.swift */,
+				18832DCC8E95A79EC18F3D3D /* Components */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		32F3A9A329ECA0FC7DE5B691 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				3A9889476040294F74D38C01 /* APIService.swift */,
+				93F9834630B21F618C34055C /* LocalizationManager.swift */,
+				72F67AD1C53558B1EA4B645D /* MockDataService.swift */,
+				0F0853B91B3C628634CEE3D2 /* NetworkManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		4DE6D9B66B06F0027C06E722 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3E6529E535A53531698E4C0D /* BusinessListing.swift */,
+				A04E231120F09FA43BA52069 /* Category.swift */,
+				4D631E56FA6A66A366C10E74 /* Message.swift */,
+				37DAF9BCD8C219B53D461D2C /* User.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		8683A09317CB6BEB0A5A2767 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				AC5F6E1CE3A3102674B49F39 /* Pods-Souqira.debug.xcconfig */,
+				A0476AAD9F562C40B6459B9F /* Pods-Souqira.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		A5CB4D445B07D9F97AD49363 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				07A31D65E851F7E49319DB87 /* Souqira.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A7D027E2A0FDE98275D17713 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				3D28C5C3BB25D05B490CAF23 /* AppSettings.swift */,
+				A5A9BAE64BDE376FC9C4B68B /* AuthenticationViewModel.swift */,
+				FAF2BC87DF4DC14A5CD58AA7 /* ListingsViewModel.swift */,
+				64DFA6D85E8C535CA4B00923 /* MessagesViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		C3C8A4AA79C9FDA87B7C2DBA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				205900F59A275C559ACA35B1 /* Pods_Souqira.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F30B822D40B82B699CCE65C0 /* SouqiraApp */ = {
+			isa = PBXGroup;
+			children = (
+				29E5DFAD228FF9296AEA9159 /* Assets.xcassets */,
+				866913F181357A61148CBE69 /* ContentView.swift */,
+				C9520192AF4C301D15758FAA /* Info.plist */,
+				D5B803A6C005BAF414AF628D /* SouqiraApp.swift */,
+				4DE6D9B66B06F0027C06E722 /* Models */,
+				32F3A9A329ECA0FC7DE5B691 /* Services */,
+				A7D027E2A0FDE98275D17713 /* ViewModels */,
+				28448E191A320F978A35C9FE /* Views */,
+			);
+			path = SouqiraApp;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		261FAB5C16C2AEFA607F2E07 /* Souqira */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C71322FCD0DBA20236D8F41C /* Build configuration list for PBXNativeTarget "Souqira" */;
+			buildPhases = (
+				1F8470D6F553197920E98386 /* [CP] Check Pods Manifest.lock */,
+				AB0AE7E8ADFEE2C5945D7EA1 /* Sources */,
+				DE485487A66C36236EA17992 /* Resources */,
+				E1EA4E0693AEA035526BE874 /* Frameworks */,
+				3A72853D4CEF88B31C011931 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Souqira;
+			productName = Souqira;
+			productReference = 07A31D65E851F7E49319DB87 /* Souqira.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		722ECA5D8ABEF6BD982F843E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					261FAB5C16C2AEFA607F2E07 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 21BFD6D6B82A393239EDE84F /* Build configuration list for PBXProject "Souqira" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 1A02525D17414771268A0F2E;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = A5CB4D445B07D9F97AD49363 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				261FAB5C16C2AEFA607F2E07 /* Souqira */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DE485487A66C36236EA17992 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BF55A73F0A19EE4C6A9C6246 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1F8470D6F553197920E98386 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Souqira-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3A72853D4CEF88B31C011931 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Souqira/Pods-Souqira-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Souqira/Pods-Souqira-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Souqira/Pods-Souqira-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AB0AE7E8ADFEE2C5945D7EA1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21342BB275A558F1FB342061 /* APIService.swift in Sources */,
+				0715302CEC6F7C0827ED3ECF /* AppSettings.swift in Sources */,
+				57444E5BD3C067076E47847A /* AuthenticationView.swift in Sources */,
+				360731DC3C2F4CF17866E909 /* AuthenticationViewModel.swift in Sources */,
+				9A2B8435D2BBCE4BEA8A7159 /* BusinessListing.swift in Sources */,
+				46C6D73C54F0DC82A9B81A9D /* Category.swift in Sources */,
+				E1D9252A03A36004B69F162A /* ChatView.swift in Sources */,
+				24E3E2F0D0A6F833F0C7FF98 /* CitiesView.swift in Sources */,
+				813F757B54A2E1DD52D49CFD /* ContentView.swift in Sources */,
+				98F4B52414B57C9F4819FBD8 /* ConversationsView.swift in Sources */,
+				C25743E76D92B19F3C67368C /* CreateListingView.swift in Sources */,
+				44D7DE450AEE7FA4C539AF2D /* FavoritesView.swift in Sources */,
+				A128C6130BA6F4CD7D6E682C /* FilterView.swift in Sources */,
+				A887DBA85ABEA0B0BB7947F6 /* HomeView.swift in Sources */,
+				467A32737B04551CC930CCD6 /* ListingCard.swift in Sources */,
+				CEDBEC1C13A61F2ADA1ACEAA /* ListingDetailView.swift in Sources */,
+				FBF7E6E6FBB75A7E7DB61D9A /* ListingsViewModel.swift in Sources */,
+				9F0FA74FE6459A413EEF6A2F /* LocalizationManager.swift in Sources */,
+				F921EA7623A45DFBDFF7C33A /* LocalizedText.swift in Sources */,
+				DB3B75BBCF5B09A9FEEA8AC8 /* MainTabView.swift in Sources */,
+				82AAEED6FCB43C0919EBA6B4 /* Message.swift in Sources */,
+				2A97B1606950C024B0E7759A /* MessageComposerView.swift in Sources */,
+				3AC8E40A857169914E94D811 /* MessagesViewModel.swift in Sources */,
+				1B405472118A319B396B07F5 /* MockDataService.swift in Sources */,
+				77356425705472FA5BA91DB6 /* NetworkManager.swift in Sources */,
+				2F461F4F4F4FFE11AC154491 /* ProfileView.swift in Sources */,
+				7E9D32A03FC21D68C59A9183 /* SettingsSheet.swift in Sources */,
+				F130340DD6C337714E9C6EE7 /* SouqiraApp.swift in Sources */,
+				5FB78EEA464A48DCFF365219 /* User.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		002F1AB373D9D95434DBA507 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		4ACA86DE00196781AB4077DE /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A0476AAD9F562C40B6459B9F /* Pods-Souqira.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = SouqiraApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.souqira.app;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		59D410CAE742188413EABCCE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AC5F6E1CE3A3102674B49F39 /* Pods-Souqira.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = SouqiraApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.souqira.app;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C84B5160F7B8F6CE13936AC8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		21BFD6D6B82A393239EDE84F /* Build configuration list for PBXProject "Souqira" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				002F1AB373D9D95434DBA507 /* Debug */,
+				C84B5160F7B8F6CE13936AC8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C71322FCD0DBA20236D8F41C /* Build configuration list for PBXNativeTarget "Souqira" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				59D410CAE742188413EABCCE /* Debug */,
+				4ACA86DE00196781AB4077DE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 722ECA5D8ABEF6BD982F843E /* Project object */;
+}

@@ -1,0 +1,38 @@
+name: Souqira
+options:
+  bundleIdPrefix: com.souqira
+  deploymentTarget:
+    iOS: "16.0"
+  developmentLanguage: en
+  
+targets:
+  Souqira:
+    type: application
+    platform: iOS
+    sources:
+      - SouqiraApp
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.souqira.app
+        DEVELOPMENT_TEAM: ""
+        INFOPLIST_FILE: SouqiraApp/Info.plist
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        CODE_SIGN_STYLE: Automatic
+    dependencies: []
+
+schemes:
+  Souqira:
+    build:
+      targets:
+        Souqira: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
