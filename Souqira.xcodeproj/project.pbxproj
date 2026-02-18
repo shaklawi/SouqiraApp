@@ -21,6 +21,7 @@
 		467A32737B04551CC930CCD6 /* ListingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2EC118341A705438AF4547 /* ListingCard.swift */; };
 		46C6D73C54F0DC82A9B81A9D /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E231120F09FA43BA52069 /* Category.swift */; };
 		57444E5BD3C067076E47847A /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4642A7197EE3DEBBEE6F61 /* AuthenticationView.swift */; };
+		578C9917BEF64896D23067F6 /* ModernListingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C931BBE2B0DD304E908D929 /* ModernListingCard.swift */; };
 		5FB78EEA464A48DCFF365219 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37DAF9BCD8C219B53D461D2C /* User.swift */; };
 		77356425705472FA5BA91DB6 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F0853B91B3C628634CEE3D2 /* NetworkManager.swift */; };
 		7E9D32A03FC21D68C59A9183 /* SettingsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A27A3695A35228FF24E8CE /* SettingsSheet.swift */; };
@@ -37,6 +38,7 @@
 		CEDBEC1C13A61F2ADA1ACEAA /* ListingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C0D03B2435A0B77D6096A9 /* ListingDetailView.swift */; };
 		DB3B75BBCF5B09A9FEEA8AC8 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82902FF000955D89C8F49D0E /* MainTabView.swift */; };
 		E1D9252A03A36004B69F162A /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B552C6800F7EA44CA4E5BEFD /* ChatView.swift */; };
+		EEA96941C88CA694B720B83F /* CleanHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283358790C4D49D8167C460B /* CleanHomeView.swift */; };
 		F130340DD6C337714E9C6EE7 /* SouqiraApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5B803A6C005BAF414AF628D /* SouqiraApp.swift */; };
 		F921EA7623A45DFBDFF7C33A /* LocalizedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEA39224A7806453D22678B8 /* LocalizedText.swift */; };
 		FBF7E6E6FBB75A7E7DB61D9A /* ListingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF2BC87DF4DC14A5CD58AA7 /* ListingsViewModel.swift */; };
@@ -46,6 +48,7 @@
 		07A31D65E851F7E49319DB87 /* Souqira.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Souqira.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F0853B91B3C628634CEE3D2 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		16C0D03B2435A0B77D6096A9 /* ListingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingDetailView.swift; sourceTree = "<group>"; };
+		283358790C4D49D8167C460B /* CleanHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanHomeView.swift; sourceTree = "<group>"; };
 		29E5DFAD228FF9296AEA9159 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2A4642A7197EE3DEBBEE6F61 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		2E87F1D8461F99D1F62DACE2 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -60,6 +63,7 @@
 		50A27A3695A35228FF24E8CE /* SettingsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSheet.swift; sourceTree = "<group>"; };
 		512C1FEBC27F52845645FEFF /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		64DFA6D85E8C535CA4B00923 /* MessagesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewModel.swift; sourceTree = "<group>"; };
+		6C931BBE2B0DD304E908D929 /* ModernListingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModernListingCard.swift; sourceTree = "<group>"; };
 		72F67AD1C53558B1EA4B645D /* MockDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataService.swift; sourceTree = "<group>"; };
 		7F2B571E7FDA9CEF31780ADD /* CitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitiesView.swift; sourceTree = "<group>"; };
 		82902FF000955D89C8F49D0E /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
@@ -97,6 +101,7 @@
 				512C1FEBC27F52845645FEFF /* CustomTabBar.swift */,
 				4D2EC118341A705438AF4547 /* ListingCard.swift */,
 				DEA39224A7806453D22678B8 /* LocalizedText.swift */,
+				6C931BBE2B0DD304E908D929 /* ModernListingCard.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -115,6 +120,7 @@
 				2A4642A7197EE3DEBBEE6F61 /* AuthenticationView.swift */,
 				B552C6800F7EA44CA4E5BEFD /* ChatView.swift */,
 				7F2B571E7FDA9CEF31780ADD /* CitiesView.swift */,
+				283358790C4D49D8167C460B /* CleanHomeView.swift */,
 				4E0BCDC23FD171338EDF07FA /* ConversationsView.swift */,
 				8BB9B97B5B06509755FF7E94 /* CreateListingView.swift */,
 				8D260B991AA40ADBAA8EFFCF /* FavoritesView.swift */,
@@ -271,6 +277,7 @@
 				46C6D73C54F0DC82A9B81A9D /* Category.swift in Sources */,
 				E1D9252A03A36004B69F162A /* ChatView.swift in Sources */,
 				24E3E2F0D0A6F833F0C7FF98 /* CitiesView.swift in Sources */,
+				EEA96941C88CA694B720B83F /* CleanHomeView.swift in Sources */,
 				813F757B54A2E1DD52D49CFD /* ContentView.swift in Sources */,
 				98F4B52414B57C9F4819FBD8 /* ConversationsView.swift in Sources */,
 				C25743E76D92B19F3C67368C /* CreateListingView.swift in Sources */,
@@ -289,6 +296,7 @@
 				2A97B1606950C024B0E7759A /* MessageComposerView.swift in Sources */,
 				3AC8E40A857169914E94D811 /* MessagesViewModel.swift in Sources */,
 				1B405472118A319B396B07F5 /* MockDataService.swift in Sources */,
+				578C9917BEF64896D23067F6 /* ModernListingCard.swift in Sources */,
 				77356425705472FA5BA91DB6 /* NetworkManager.swift in Sources */,
 				2F461F4F4F4FFE11AC154491 /* ProfileView.swift in Sources */,
 				7E9D32A03FC21D68C59A9183 /* SettingsSheet.swift in Sources */,

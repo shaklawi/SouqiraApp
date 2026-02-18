@@ -18,7 +18,7 @@ struct MainTabView: View {
             Group {
                 switch selectedTab {
                 case .home:
-                    HomeView()
+                    CleanHomeView()
                 case .shop:
                     CitiesView()
                 case .messages:
@@ -37,10 +37,4 @@ struct MainTabView: View {
         .ignoresSafeArea(.keyboard, edges: .bottom)
         .environment(\.layoutDirection, appSettings.isRTL ? .rightToLeft : .leftToRight)
     }
-}
-
-#Preview {
-    MainTabView()
-        .environmentObject(AuthenticationViewModel())
-        .environmentObject(AppSettings())
 }
