@@ -12,70 +12,150 @@ struct ListingCard: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Image - 140px
-            AsyncImage(url: URL(string: listing.images.first ?? "")) { image in
-                image.resizable().scaledToFill()
-            } placeholder: {
-                Color.gray.opacity(0.2)
-                    .overlay {
+            // Image with gradient overlay
+            ZStack(alignment: .topTrailing) {
+                AsyncImage(url: URL(string: listing.images.first ?? "")) { image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                } placeholder: {
+                    ZStack {
+                        LinearGradient(
+                            colors: [
+                                Color.blue.opacity(0.1),
+                                Color.purple.opacity(0.08)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                        
                         Image(systemName: "building.2")
-                            .foregroundColor(.gray)
-                            .font(.title)
+                            .font(.system(size: 32))
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [.blue.opacity(0.4), .purple.opacity(0.4)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
                     }
+                }
+                .frame(width: 180, height: 140)
+                .clipped()
+                
+                // Gradient overlay for better text contrast
+                LinearGradient(
+                    colors: [
+                        Color.black.opacity(0.0),
+                        Color.black.opacity(0.2)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .frame(width: 180, height: 140)
+                
+                // Featured badge
+                if listing.isFeatured == true {
+                    HStack(spacing: 4) {
+                        Image(systemName: "star.fill")
+                            .font(.system(size: 10))
+                        Text("Featured")
+                            .font(.system(size: 11, weight: .semibold))
+                    }
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(
+                        Capsule()
+                            .fill(
+                                LinearGradient(
+                                    colors: [.orange, .red],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .shadow(color: .orange.opacity(0.5), radius: 8, x: 0, y: 2)
+                    )
+                    .padding(8)
+                }
             }
-            .frame(width: 180, height: 140)
-            .clipped()
             
-            // Content - 80px
-            VStack(spacing: 4) {
-                // Title - 2 lines
+            // Content with better spacing
+            VStack(spacing: 6) {
+                // Title with better typography
                 Text(listing.title)
                     .font(.system(size: 14, weight: .semibold))
                     .lineLimit(2)
                     .truncationMode(.tail)
-                    .foregroundColor(Color(red: 0.1, green: 0.1, blue: 0.1))
+                    .foregroundColor(.primary)
                     .frame(width: 160, height: 38, alignment: .topLeading)
                     .multilineTextAlignment(.leading)
                 
-                // Location
-                HStack(spacing: 3) {
+                // Location with icon
+                HStack(spacing: 4) {
                     Image(systemName: "mappin.circle.fill")
-                        .font(.system(size: 9))
-                    Text(listing.location.capitalized)
                         .font(.system(size: 10))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [.blue, .purple],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                    Text(listing.location.capitalized)
+                        .font(.system(size: 11))
                         .lineLimit(1)
+                        .foregroundColor(.secondary)
                 }
-                .foregroundColor(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Spacer(minLength: 0)
                 
-                // Price & Views
+                // Price & Views with modern design
                 HStack(alignment: .center, spacing: 8) {
                     Text(listing.formattedPrice)
-                        .font(.system(size: 12, weight: .bold))
-                        .foregroundColor(.blue)
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [.blue, .purple],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
                         .lineLimit(1)
                     
                     Spacer()
                     
-                    HStack(spacing: 3) {
+                    HStack(spacing: 4) {
                         Image(systemName: "eye.fill")
-                            .font(.system(size: 8))
-                        Text("\(listing.views)")
                             .font(.system(size: 9))
+                        Text("\(listing.views)")
+                            .font(.system(size: 10, weight: .medium))
                     }
                     .foregroundColor(.secondary)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(
+                        Capsule()
+                            .fill(Color(.systemGray6))
+                    )
                 }
             }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 8)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
             .frame(width: 180, height: 80)
         }
         .frame(width: 180, height: 220)
-        .background(Color(.systemBackground))
-        .cornerRadius(10)
-        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(.systemBackground))
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.08), radius: 12, x: 0, y: 6)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color.gray.opacity(0.1), lineWidth: 0.5)
+        )
     }
 }
 

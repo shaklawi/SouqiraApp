@@ -56,15 +56,37 @@ struct CustomTabBar: View {
                 }
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .background(
-            RoundedRectangle(cornerRadius: 30)
-                .fill(Color(.systemBackground))
-                .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: -5)
-        )
         .padding(.horizontal, 20)
-        .padding(.bottom, 10)
+        .padding(.vertical, 16)
+        .background(
+            ZStack {
+                // Glassmorphism effect
+                RoundedRectangle(cornerRadius: 28)
+                    .fill(Color(.systemBackground).opacity(0.9))
+                    .background(
+                        RoundedRectangle(cornerRadius: 28)
+                            .fill(.ultraThinMaterial)
+                    )
+                    .shadow(color: .black.opacity(0.08), radius: 20, x: 0, y: -5)
+                    .shadow(color: .black.opacity(0.04), radius: 10, x: 0, y: -2)
+                
+                // Subtle gradient overlay
+                RoundedRectangle(cornerRadius: 28)
+                    .stroke(
+                        LinearGradient(
+                            colors: [
+                                Color.white.opacity(0.3),
+                                Color.white.opacity(0.1)
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        ),
+                        lineWidth: 0.5
+                    )
+            }
+        )
+        .padding(.horizontal, 16)
+        .padding(.bottom, 8)
     }
 }
 
@@ -80,30 +102,45 @@ struct TabBarButton: View {
     
     var body: some View {
         Button(action: {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
                 selectedTab = tab
             }
         }) {
-            VStack(spacing: 4) {
+            VStack(spacing: 6) {
                 ZStack {
                     if isSelected {
+                        // Gradient circle with glow
                         Circle()
-                            .fill(Color.blue)
-                            .frame(width: 50, height: 50)
+                            .fill(
+                                LinearGradient(
+                                    colors: [.blue, .purple],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .frame(width: 56, height: 56)
+                            .shadow(color: .blue.opacity(0.4), radius: 12, x: 0, y: 4)
                             .matchedGeometryEffect(id: "TAB", in: animation)
                     }
                     
                     Image(systemName: tab.iconName)
-                        .font(.system(size: 22))
-                        .foregroundColor(isSelected ? .white : .gray)
+                        .font(.system(size: 24, weight: isSelected ? .semibold : .regular))
+                        .foregroundColor(isSelected ? .white : .secondary)
+                        .scaleEffect(isSelected ? 1.0 : 0.9)
                 }
-                .frame(width: 50, height: 50)
+                .frame(width: 56, height: 56)
                 
                 if isSelected {
                     Text(getLocalizedTitle(for: tab))
-                        .font(.caption2)
-                        .fontWeight(.medium)
-                        .foregroundColor(.primary)
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [.blue, .purple],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .transition(.scale.combined(with: .opacity))
                 }
             }
             .frame(maxWidth: .infinity)
