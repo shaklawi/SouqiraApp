@@ -11,14 +11,8 @@ struct ContentView: View {
     @EnvironmentObject var authViewModel: AuthenticationViewModel
     
     var body: some View {
-        Group {
-            if authViewModel.isAuthenticated {
-                MainTabView()
-            } else {
-                HomeView()
-            }
-        }
-        .animation(.easeInOut, value: authViewModel.isAuthenticated)
+        MainTabView()
+            .animation(.easeInOut, value: authViewModel.isAuthenticated)
     }
 }
 

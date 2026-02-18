@@ -10,44 +10,31 @@ import SwiftUI
 struct MainTabView: View {
     @EnvironmentObject var appSettings: AppSettings
     @EnvironmentObject var authViewModel: AuthenticationViewModel
-    @State private var selectedTab = 0
+    @State private var selectedTab: TabItem = .home
     
     var body: some View {
-        TabView(selection: $selectedTab) {
-            HomeView()
-                .tabItem {
-                    Label(LocalizationManager.home.get(language: appSettings.language), systemImage: "house.fill")
+        ZStack(alignment: .bottom) {
+            // Main content
+            Group {
+                switch selectedTab {
+                case .home:
+                    HomeView()
+                case .shop:
+                    CitiesView()
+                case .messages:
+                    ConversationsView()
+                case .categories:
+                    FavoritesView()
+                case .profile:
+                    ProfileView()
                 }
-                .tag(0)
-            
-            CitiesView()
-                .tabItem {
-                    Label(LocalizationManager.cities.get(language: appSettings.language), systemImage: "map.fill")
-                }
-                .tag(1)
-            
-            CreateListingView()
-                .tabItem {
-                    Label(LocalizationManager.createAd.get(language: appSettings.language), systemImage: "plus.circle.fill")
-                }
-                .tag(2)
-            
-            // Messages tab - only visible when logged in
-            if authViewModel.isAuthenticated {
-                ConversationsView()
-                    .tabItem {
-                        Label(LocalizationManager.messages.get(language: appSettings.language), systemImage: "message.fill")
-                    }
-                    .tag(3)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             
-            FavoritesView()
-                .tabItem {
-                    Label(LocalizationManager.favorites.get(language: appSettings.language), systemImage: "heart.fill")
-                }
-                .tag(4)
+            // Custom Tab Bar
+            CustomTabBar(selectedTab: $selectedTab)
         }
-        .accentColor(.blue)
+        .ignoresSafeArea(.keyboard, edges: .bottom)
         .environment(\.layoutDirection, appSettings.isRTL ? .rightToLeft : .leftToRight)
     }
 }
