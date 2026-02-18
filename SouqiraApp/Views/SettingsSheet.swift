@@ -175,7 +175,7 @@ struct LanguageSelectionSheet: View {
     let languages = [
         ("en", "English", "🇬🇧"),
         ("ar", "العربية", "🇮🇶"),
-        ("ku", "کوردی", "☀️")
+        ("ku", "کوردی", "🟥⚪🟩")
     ]
     
     var body: some View {
