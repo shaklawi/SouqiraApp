@@ -6,6 +6,12 @@
 //
 
 import SwiftUI
+import MapKit
+
+struct MapLocation: Identifiable {
+    let id: String
+    let coordinate: CLLocationCoordinate2D
+}
 
 struct ListingDetailView: View {
     let listing: BusinessListing
@@ -14,8 +20,28 @@ struct ListingDetailView: View {
     @State private var showContactSheet = false
     @State private var isFavorite = false
     @State private var showShareSheet = false
+    @State private var showPriceHistory = false
+    @State private var region: MKCoordinateRegion
     
     private let apiService = APIService()
+    
+    init(listing: BusinessListing) {
+        self.listing = listing
+        if let coords = listing.coordinates {
+            _region = State(initialValue: MKCoordinateRegion(
+                center: CLLocationCoordinate2D(
+                    latitude: coords.lat,
+                    longitude: coords.lng
+                ),
+                span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+            ))
+        } else {
+            _region = State(initialValue: MKCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: 33.3152, longitude: 44.3661), // Baghdad center
+                span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+            ))
+        }
+    }
     
     var body: some View {
         ScrollView {
@@ -83,6 +109,82 @@ struct ListingDetailView: View {
                     
                     Divider()
                     
+                    // Price History
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Image(systemName: "chart.line.uptrend.xyaxis")
+                                .foregroundColor(.blue)
+                            Text("Price History")
+                                .font(.headline)
+                            Spacer()
+                            Button(action: { showPriceHistory.toggle() }) {
+                                Image(systemName: showPriceHistory ? "chevron.up" : "chevron.down")
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        
+                        if showPriceHistory {
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack {
+                                    Text("Original Price:")
+                                        .foregroundColor(.secondary)
+                                    Spacer()
+                                    Text(listing.formattedPrice)
+                                        .fontWeight(.semibold)
+                                }
+                                Text("No price changes yet")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .italic()
+                            }
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .cornerRadius(12)
+                        }
+                    }
+                    
+                    Divider()
+                    
+                    // Google Maps Location
+                    if let address = listing.address, !address.isEmpty, let coords = listing.coordinates {
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack {
+                                Image(systemName: "map.fill")
+                                    .foregroundColor(.blue)
+                                Text("Location")
+                                    .font(.headline)
+                            }
+                            
+                            Text(address)
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            
+                            Map(coordinateRegion: $region, annotationItems: [MapLocation(id: listing.id, coordinate: CLLocationCoordinate2D(latitude: coords.lat, longitude: coords.lng))]) { location in
+                                MapMarker(coordinate: location.coordinate, tint: .blue)
+                            }
+                            .frame(height: 200)
+                            .cornerRadius(12)
+                            .onTapGesture {
+                                openInMaps()
+                            }
+                            
+                            Button(action: openInMaps) {
+                                HStack {
+                                    Image(systemName: "arrow.triangle.turn.up.right.circle.fill")
+                                    Text("Open in Maps")
+                                        .fontWeight(.semibold)
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                                .background(Color.blue.opacity(0.1))
+                                .foregroundColor(.blue)
+                                .cornerRadius(10)
+                            }
+                        }
+                    }
+                    
+                    Divider()
+                    
                     // Category
                     HStack {
                         Text(LocalizationManager.category.get(language: appSettings.language))
@@ -119,14 +221,86 @@ struct ListingDetailView: View {
         }
         .safeAreaInset(edge: .bottom) {
             if !listing.isSold {
-                contactButton
-                    .padding()
-                    .background(.ultraThinMaterial)
+                HStack(spacing: 12) {
+                    // WhatsApp Button
+                    if let whatsapp = listing.whatsapp {
+                        Button(action: { openWhatsApp(number: whatsapp) }) {
+                            HStack {
+                                Image(systemName: "message.fill")
+                                Text("WhatsApp")
+                                    .fontWeight(.semibold)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                        }
+                    }
+                    
+                    // Call Button
+                    if let phone = listing.phone {
+                        Button(action: { callPhone(number: phone) }) {
+                            HStack {
+                                Image(systemName: "phone.fill")
+                                Text("Call")
+                                    .fontWeight(.semibold)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                        }
+                    }
+                }
+                .padding()
+                .background(.ultraThinMaterial)
             }
         }
         .sheet(isPresented: $showContactSheet) {
             ContactSellerView(listing: listing)
         }
+    }
+    
+    private func openWhatsApp(number: String) {
+        let cleanNumber = number.replacingOccurrences(of: " ", with: "")
+            .replacingOccurrences(of: "-", with: "")
+            .replacingOccurrences(of: "(", with: "")
+            .replacingOccurrences(of: ")", with: "")
+        
+        let message = "Hi, I'm interested in your listing: \(listing.title)"
+        let urlString = "https://wa.me/\(cleanNumber)?text=\(message.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
+        
+        if let url = URL(string: urlString) {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    private func callPhone(number: String) {
+        let cleanNumber = number.replacingOccurrences(of: " ", with: "")
+            .replacingOccurrences(of: "-", with: "")
+            .replacingOccurrences(of: "(", with: "")
+            .replacingOccurrences(of: ")", with: "")
+        
+        if let url = URL(string: "tel://\(cleanNumber)") {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    private func openInMaps() {
+        guard let coords = listing.coordinates else { return }
+        
+        let coordinate = CLLocationCoordinate2D(
+            latitude: coords.lat,
+            longitude: coords.lng
+        )
+        let placemark = MKPlacemark(coordinate: coordinate)
+        let mapItem = MKMapItem(placemark: placemark)
+        mapItem.name = listing.title
+        mapItem.openInMaps(launchOptions: [
+            MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving
+        ])
     }
     
     private func imageGallery(images: [String]) -> some View {
