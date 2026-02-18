@@ -13,6 +13,8 @@ struct CleanHomeView: View {
     @EnvironmentObject var appSettings: AppSettings
     @State private var showFilters = false
     @State private var showSettingsSheet = false
+    @State private var showAuthSheet = false
+    @State private var showCreateListing = false
     
     var body: some View {
         NavigationStack {
@@ -29,7 +31,13 @@ struct CleanHomeView: View {
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)
                         
-                        Button(action: { showSettingsSheet = true }) {
+                        Button(action: {
+                            if authViewModel.isAuthenticated {
+                                showCreateListing = true
+                            } else {
+                                showAuthSheet = true
+                            }
+                        }) {
                             HStack(spacing: 8) {
                                 Image(systemName: "plus.circle.fill")
                                 Text(LocalizationManager.createAd.get(language: appSettings.language))
@@ -166,6 +174,21 @@ struct CleanHomeView: View {
             }
             .sheet(isPresented: $showSettingsSheet) {
                 SettingsSheet()
+            }
+            .sheet(isPresented: $showAuthSheet) {
+                AuthenticationView()
+            }
+            .sheet(isPresented: $showCreateListing) {
+                CreateListingView()
+            }
+            .onChange(of: authViewModel.isAuthenticated) { isAuthenticated in
+                if isAuthenticated && showAuthSheet {
+                    showAuthSheet = false
+                    // Wait a moment then show create listing
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        showCreateListing = true
+                    }
+                }
             }
             .task {
                 if viewModel.listings.isEmpty {
