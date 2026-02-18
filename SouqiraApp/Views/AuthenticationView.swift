@@ -12,6 +12,7 @@ struct AuthenticationView: View {
     @Environment(\.dismiss) var dismiss
     @State private var phoneNumber = ""
     @State private var showWhatsAppLogin = false
+    @State private var showErrorAlert = false
     
     var body: some View {
         NavigationStack {
@@ -61,16 +62,26 @@ struct AuthenticationView: View {
                     
                     // Google Sign In
                     Button(action: {
+                        print("🔵 Google Sign In button tapped")
                         Task {
                             await authViewModel.loginWithGoogle()
                             if authViewModel.isAuthenticated {
+                                print("✅ Google Sign In successful, dismissing")
                                 dismiss()
+                            } else if let error = authViewModel.errorMessage {
+                                print("❌ Google Sign In failed: \(error)")
+                                showErrorAlert = true
                             }
                         }
                     }) {
                         HStack {
-                            Image(systemName: "g.circle.fill")
-                                .font(.title3)
+                            if authViewModel.isLoading {
+                                ProgressView()
+                                    .tint(.black)
+                            } else {
+                                Image(systemName: "g.circle.fill")
+                                    .font(.title3)
+                            }
                             Text("Sign in with Google")
                                 .fontWeight(.semibold)
                         }
@@ -107,6 +118,13 @@ struct AuthenticationView: View {
             }
             .sheet(isPresented: $showWhatsAppLogin) {
                 WhatsAppLoginView()
+            }
+            .alert("Sign In Error", isPresented: $showErrorAlert) {
+                Button("OK", role: .cancel) {
+                    authViewModel.errorMessage = nil
+                }
+            } message: {
+                Text(authViewModel.errorMessage ?? "An error occurred")
             }
         }
     }

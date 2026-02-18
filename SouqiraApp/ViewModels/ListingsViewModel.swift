@@ -52,6 +52,9 @@ class ListingsViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         
+        print("🔍 [ListingsViewModel] Starting fetchListings - page: \(currentPage)")
+        print("🔍 [ListingsViewModel] Filters - category: \(selectedCategory?.id ?? "none"), region: \(selectedRegion?.id ?? "none"), search: '\(searchQuery)'")
+        
         do {
             let response = try await apiService.fetchListings(
                 page: currentPage,
@@ -74,6 +77,11 @@ class ListingsViewModel: ObservableObject {
             print("✅ Loaded \(response.listings.count) listings (page \(currentPage - 1) of \(response.pages))")
         } catch {
             print("❌ Failed to load listings: \(error)")
+            print("❌ Error type: \(type(of: error))")
+            if let nsError = error as NSError? {
+                print("❌ NSError domain: \(nsError.domain), code: \(nsError.code)")
+                print("❌ NSError userInfo: \(nsError.userInfo)")
+            }
             errorMessage = "Failed to load listings"
             
             // If this is the first load and we have no data, still show error but listings might have mock data

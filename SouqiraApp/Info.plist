@@ -60,7 +60,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to your camera to take photos of your business</string>
 	<key>GIDClientID</key>
-	<string>YOUR_GOOGLE_CLIENT_ID</string>
+	<string>595247213772-uteg00fanualq5be1l9hs0pf9ccre1re.apps.googleusercontent.com</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -68,7 +68,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.YOUR_REVERSED_CLIENT_ID</string>
+				<string>com.googleusercontent.apps.595247213772-uteg00fanualq5be1l9hs0pf9ccre1re</string>
 			</array>
 		</dict>
 	</array>

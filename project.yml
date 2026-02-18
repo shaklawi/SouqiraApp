@@ -4,6 +4,11 @@ options:
   deploymentTarget:
     iOS: "16.0"
   developmentLanguage: en
+
+packages:
+  GoogleSignIn:
+    url: https://github.com/google/GoogleSignIn-iOS
+    majorVersion: 7.1.0
   
 targets:
   Souqira:
@@ -19,7 +24,9 @@ targets:
         SWIFT_VERSION: "5.0"
         TARGETED_DEVICE_FAMILY: "1,2"
         CODE_SIGN_STYLE: Automatic
-    dependencies: []
+    dependencies:
+      - package: GoogleSignIn
+        product: GoogleSignIn
 
 schemes:
   Souqira:

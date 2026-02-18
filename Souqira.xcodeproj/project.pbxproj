@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0715302CEC6F7C0827ED3ECF /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D28C5C3BB25D05B490CAF23 /* AppSettings.swift */; };
+		19CFEA7A18AE56902329BDAF /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 969A44847E231446227EF0CE /* GoogleSignIn */; };
 		1B405472118A319B396B07F5 /* MockDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F67AD1C53558B1EA4B645D /* MockDataService.swift */; };
 		21342BB275A558F1FB342061 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9889476040294F74D38C01 /* APIService.swift */; };
 		24E3E2F0D0A6F833F0C7FF98 /* CitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2B571E7FDA9CEF31780ADD /* CitiesView.swift */; };
@@ -77,6 +78,17 @@
 		FA22648959FE421C6A8530C3 /* GoogleSignInManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleSignInManager.swift; sourceTree = "<group>"; };
 		FAF2BC87DF4DC14A5CD58AA7 /* ListingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingsViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3BBC72D167CFE8F0CF0CE531 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				19CFEA7A18AE56902329BDAF /* GoogleSignIn in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		18832DCC8E95A79EC18F3D3D /* Components */ = {
@@ -184,6 +196,7 @@
 			buildPhases = (
 				AB0AE7E8ADFEE2C5945D7EA1 /* Sources */,
 				DE485487A66C36236EA17992 /* Resources */,
+				3BBC72D167CFE8F0CF0CE531 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -191,6 +204,7 @@
 			);
 			name = Souqira;
 			packageProductDependencies = (
+				969A44847E231446227EF0CE /* GoogleSignIn */,
 			);
 			productName = Souqira;
 			productReference = 07A31D65E851F7E49319DB87 /* Souqira.app */;
@@ -221,6 +235,9 @@
 			);
 			mainGroup = 1A02525D17414771268A0F2E;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				340D938DF74116039EF353C9 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
 			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
@@ -462,6 +479,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		340D938DF74116039EF353C9 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		969A44847E231446227EF0CE /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 340D938DF74116039EF353C9 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 722ECA5D8ABEF6BD982F843E /* Project object */;
 }

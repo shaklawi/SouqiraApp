@@ -23,43 +23,60 @@ class GoogleSignInManager: ObservableObject {
     /// Configure Google Sign In with the client ID from Info.plist
     func configure() {
         #if canImport(GoogleSignIn)
+        print("🔧 [GoogleSignInManager] Configuring Google Sign In...")
         guard let clientID = Bundle.main.object(forInfoDictionaryKey: "GIDClientID") as? String else {
-            print("⚠️ Warning: GIDClientID not found in Info.plist")
+            print("⚠️ [GoogleSignInManager] GIDClientID not found in Info.plist")
             return
         }
         
+        print("✅ [GoogleSignInManager] Found Client ID: \(clientID.prefix(20))...")
         let config = GIDConfiguration(clientID: clientID)
         GIDSignIn.sharedInstance.configuration = config
+        print("✅ [GoogleSignInManager] Configuration complete")
         #else
-        print("⚠️ GoogleSignIn framework not available")
+        print("⚠️ [GoogleSignInManager] GoogleSignIn framework not available")
         #endif
     }
     
     /// Sign in with Google
     func signIn() async throws -> String {
         #if canImport(GoogleSignIn)
+        print("📱 [GoogleSignInManager] Starting sign in flow...")
+        
         // Get the presenting view controller
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let rootViewController = windowScene.windows.first?.rootViewController else {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
+            print("❌ [GoogleSignInManager] No window scene found")
             throw GoogleSignInError.noViewController
         }
         
+        guard let rootViewController = windowScene.windows.first?.rootViewController else {
+            print("❌ [GoogleSignInManager] No root view controller found")
+            throw GoogleSignInError.noViewController
+        }
+        
+        print("✅ [GoogleSignInManager] Found view controller: \(type(of: rootViewController))")
+        
         do {
+            print("🔄 [GoogleSignInManager] Calling GIDSignIn.signIn...")
             let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController)
+            print("✅ [GoogleSignInManager] Sign in successful!")
             
             // Get the ID token
             guard let idToken = result.user.idToken?.tokenString else {
+                print("❌ [GoogleSignInManager] No ID token in result")
                 throw GoogleSignInError.noIDToken
             }
             
+            print("✅ [GoogleSignInManager] Got ID token: \(idToken.prefix(20))...")
             isSignedIn = true
             return idToken
             
         } catch {
-            print("❌ Google Sign In error: \(error)")
+            print("❌ [GoogleSignInManager] Sign in failed: \(error)")
             throw error
         }
         #else
+        print("❌ [GoogleSignInManager] GoogleSignIn not available")
         throw GoogleSignInError.notAvailable
         #endif
     }

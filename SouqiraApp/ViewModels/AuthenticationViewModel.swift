@@ -82,23 +82,39 @@ class AuthenticationViewModel: ObservableObject {
     }
     
     func loginWithGoogle() async {
+        print("🔵 [AuthViewModel] Starting Google Sign In")
         isLoading = true
         errorMessage = nil
         
         do {
+            print("📱 [AuthViewModel] Calling GoogleSignInManager.signIn()")
             // Sign in with Google and get ID token
             let idToken = try await GoogleSignInManager.shared.signIn()
+            print("✅ [AuthViewModel] Got ID token from Google: \(idToken.prefix(20))...")
             
+            print("📡 [AuthViewModel] Sending ID token to backend")
             // Send ID token to backend
             let response = try await apiService.loginWithGoogle(idToken: idToken)
+            print("✅ [AuthViewModel] Backend login successful")
             
             // Tokens are already stored in NetworkManager by APIService
             currentUser = response.user
             isAuthenticated = true
+            print("✅ [AuthViewModel] User authenticated: \(response.user.name)")
             
+        } catch let error as GoogleSignInError {
+            switch error {
+            case .noViewController:
+                errorMessage = "Could not present Google Sign In. Please try again."
+            case .noIDToken:
+                errorMessage = "Failed to get authentication token from Google."
+            case .notAvailable:
+                errorMessage = "Google Sign In is not available. Please check your configuration."
+            }
+            print("❌ [AuthViewModel] Google Sign In error: \(error)")
         } catch {
             errorMessage = "Failed to sign in with Google. Please try again."
-            print("❌ Google login error: \(error)")
+            print("❌ [AuthViewModel] Google login error: \(error)")
         }
         
         isLoading = false
