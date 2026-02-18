@@ -30,6 +30,7 @@ class ListingsViewModel: ObservableObject {
     init() {
         Task {
             await loadCategoriesAndRegions()
+            await fetchListings(refresh: true)
         }
     }
     

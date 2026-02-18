@@ -175,7 +175,7 @@ struct LanguageSelectionSheet: View {
     let languages = [
         ("en", "English", "🇬🇧"),
         ("ar", "العربية", "🇮🇶"),
-        ("ku", "کوردی", "🟥⚪🟩")
+        ("ku", "کوردی", "")
     ]
     
     var body: some View {
@@ -187,8 +187,7 @@ struct LanguageSelectionSheet: View {
                         dismiss()
                     } label: {
                         HStack {
-                            Text(flag)
-                                .font(.title2)
+                            flagView(code: code, emoji: flag)
                             Text(name)
                                 .foregroundColor(.primary)
                             Spacer()
@@ -210,6 +209,26 @@ struct LanguageSelectionSheet: View {
                 }
             }
         }
+    }
+    
+    private func flagView(code: String, emoji: String) -> some View {
+        Group {
+            if code == "ku" {
+                Image("flag")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 28, height: 20)
+                    .clipShape(RoundedRectangle(cornerRadius: 3, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 3, style: .continuous)
+                            .stroke(Color.secondary.opacity(0.2), lineWidth: 0.5)
+                    )
+            } else {
+                Text(emoji)
+                    .font(.title2)
+            }
+        }
+        .frame(width: 28, alignment: .leading)
     }
 }
 

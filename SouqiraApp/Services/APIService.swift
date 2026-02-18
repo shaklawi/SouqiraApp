@@ -21,65 +21,40 @@ struct APIService {
         maxPrice: Double? = nil,
         search: String? = nil
     ) async throws -> (listings: [BusinessListing], total: Int, page: Int, pages: Int) {
-        // Try real API first
-        do {
-            var queryItems: [String] = ["page=\(page)", "limit=12"]
-            
-            if let category = category {
-                queryItems.append("category=\(category)")
-            }
-            if let region = region {
-                queryItems.append("location=\(region)")
-            }
-            if let minPrice = minPrice {
-                queryItems.append("minPrice=\(Int(minPrice))")
-            }
-            if let maxPrice = maxPrice {
-                queryItems.append("maxPrice=\(Int(maxPrice))")
-            }
-            if let search = search, !search.isEmpty {
-                queryItems.append("search=\(search.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")
-            }
-            
-            let query = queryItems.joined(separator: "&")
-            print("📡 Fetching listings: /api/listing?\(query)")
-            let response: APIResponse<ListingsResponse> = try await networkManager.fetch(endpoint: "/api/listing?\(query)")
-            print("✅ Using real API data from https://api.souqira.com")
-            
-            guard let data = response.data else {
-                print("❌ No data in response")
-                throw NetworkError.noData
-            }
-            
-            print("✅ Got \(data.listings.count) listings from API")
-            
-            let total = data.total
-            let pages = (total + 11) / 12
-            
-            return (listings: data.listings, total: total, page: page, pages: pages)
-        } catch {
-            // Fallback to mock data if API fails
-            print("⚠️ API failed, using mock data. Error: \(error)")
-            if let decodingError = error as? DecodingError {
-                print("🔍 Decoding error details: \(decodingError)")
-            }
-            let mockListings = mockDataService.getMockListings(
-                category: category,
-                region: region,
-                search: search
-            )
-            
-            // Filter by price if needed
-            var filtered = mockListings
-            if let minPrice = minPrice {
-                filtered = filtered.filter { $0.price >= minPrice }
-            }
-            if let maxPrice = maxPrice {
-                filtered = filtered.filter { $0.price <= maxPrice }
-            }
-            
-            return (listings: filtered, total: filtered.count, page: 1, pages: 1)
+        var queryItems: [String] = ["page=\(page)", "limit=12"]
+        
+        if let category = category {
+            queryItems.append("category=\(category)")
         }
+        if let region = region {
+            queryItems.append("location=\(region)")
+        }
+        if let minPrice = minPrice {
+            queryItems.append("minPrice=\(Int(minPrice))")
+        }
+        if let maxPrice = maxPrice {
+            queryItems.append("maxPrice=\(Int(maxPrice))")
+        }
+        if let search = search, !search.isEmpty {
+            queryItems.append("search=\(search.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")
+        }
+        
+        let query = queryItems.joined(separator: "&")
+        print("📡 Fetching listings: /api/listing?\(query)")
+        let response: APIResponse<ListingsResponse> = try await networkManager.fetch(endpoint: "/api/listing?\(query)")
+        print("✅ Using real API data from https://api.souqira.com")
+        
+        guard let data = response.data else {
+            print("❌ No data in response")
+            throw NetworkError.noData
+        }
+        
+        print("✅ Got \(data.listings.count) listings from API")
+        
+        let total = data.total
+        let pages = (total + 11) / 12
+        
+        return (listings: data.listings, total: total, page: page, pages: pages)
     }
     
     func fetchListingDetail(id: String) async throws -> BusinessListing {
@@ -178,7 +153,7 @@ struct APIService {
     
     func loginWithGoogle(idToken: String) async throws -> AuthResponse {
         let request = GoogleLoginRequest(idToken: idToken)
-        let response: APIResponse<AuthResponse> = try await networkManager.fetch(endpoint: "/api/auth/google", method: "POST", body: request)
+        let response: APIResponse<AuthResponse> = try await networkManager.fetch(endpoint: "/api/auth/google/token", method: "POST", body: request)
         
         guard let authData = response.data else {
             throw NetworkError.noData

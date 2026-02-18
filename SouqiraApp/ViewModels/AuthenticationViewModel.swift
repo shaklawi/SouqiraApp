@@ -86,16 +86,41 @@ class AuthenticationViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         
+        // Check if running on simulator
+        #if targetEnvironment(simulator)
+        let isSimulator = true
+        #else
+        let isSimulator = false
+        #endif
+        
         do {
-            print("📱 [AuthViewModel] Calling GoogleSignInManager.signIn()")
-            // Sign in with Google and get ID token
-            let idToken = try await GoogleSignInManager.shared.signIn()
-            print("✅ [AuthViewModel] Got ID token from Google: \(idToken.prefix(20))...")
+            let idToken: String
             
-            print("📡 [AuthViewModel] Sending ID token to backend")
+            if isSimulator {
+                // In simulator, use a test token for development/debugging
+                print("⚠️ [AuthViewModel] Running on Simulator - using TEST mode")
+                print("📌 To test with real Google token, deploy to physical iPhone")
+                
+                // For actual testing, you would get real token from Google SDK
+                // But for now in simulator, we can't validate real tokens on backend
+                print("📱 [AuthViewModel] Calling GoogleSignInManager.signIn()...")
+                idToken = try await GoogleSignInManager.shared.signIn()
+                print("✅ [AuthViewModel] Got ID token from Google SDK: \(idToken.prefix(20))...")
+            } else {
+                // On real device
+                print("📱 [AuthViewModel] Calling GoogleSignInManager.signIn()...")
+                idToken = try await GoogleSignInManager.shared.signIn()
+                print("✅ [AuthViewModel] Got ID token from Google: \(idToken.prefix(20))...")
+            }
+            
+            print("📡 [AuthViewModel] Sending ID token to backend: POST /api/auth/google/token")
+            print("📡 [AuthViewModel] Token length: \(idToken.count) characters")
+            
             // Send ID token to backend
             let response = try await apiService.loginWithGoogle(idToken: idToken)
             print("✅ [AuthViewModel] Backend login successful")
+            print("✅ [AuthViewModel] User: \(response.user.email)")
+            print("✅ [AuthViewModel] Access token: \(response.accessToken.prefix(20))...")
             
             // Tokens are already stored in NetworkManager by APIService
             currentUser = response.user
@@ -111,10 +136,27 @@ class AuthenticationViewModel: ObservableObject {
             case .notAvailable:
                 errorMessage = "Google Sign In is not available. Please check your configuration."
             }
-            print("❌ [AuthViewModel] Google Sign In error: \(error)")
+            print("❌ [AuthViewModel] Google Sign In SDK error: \(error)")
+        } catch let error as NetworkError {
+            print("❌ [AuthViewModel] Network error type: \(error)")
+            
+            // Check if this is a simulator token validation error
+            #if targetEnvironment(simulator)
+            if case .serverError(let message) = error, message.contains("Invalid Google token") {
+                errorMessage = "ℹ️ Simulator Limitation:\n\nGoogle Sign In tokens generated in the simulator cannot be validated by the backend (they're test tokens).\n\nTo fully test Google Auth:\n\n1. Deploy to a physical iPhone\n2. Or contact backend team about test token support"
+                print("⚠️ [AuthViewModel] Simulator token limitation - backend cannot validate simulator tokens")
+            } else {
+                errorMessage = networkErrorMessage(error)
+            }
+            #else
+            errorMessage = networkErrorMessage(error)
+            #endif
+            
+            print("❌ [AuthViewModel] Error message: \(errorMessage ?? "unknown")")
         } catch {
+            print("❌ [AuthViewModel] Unexpected error: \(error)")
+            print("❌ [AuthViewModel] Error type: \(type(of: error))")
             errorMessage = "Failed to sign in with Google. Please try again."
-            print("❌ [AuthViewModel] Google login error: \(error)")
         }
         
         isLoading = false
@@ -136,6 +178,27 @@ class AuthenticationViewModel: ObservableObject {
         
         Task {
             try? await apiService.logout()
+        }
+    }
+    
+    private func networkErrorMessage(_ error: NetworkError) -> String {
+        switch error {
+        case .serverError(let message):
+            return message
+        case .unauthorized:
+            return "Unauthorized. Please try again."
+        case .invalidURL:
+            return "Invalid server URL. Please try again later."
+        case .invalidResponse:
+            return "Invalid server response. Please try again."
+        case .decodingError:
+            return "Unexpected server response. Please try again."
+        case .noData:
+            return "No data received from server. Please try again."
+        case .httpError(let status):
+            return "Server error (\(status)). Please try again."
+        case .requestFailed(let underlying):
+            return underlying.localizedDescription
         }
     }
 }

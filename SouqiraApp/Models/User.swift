@@ -16,20 +16,28 @@ struct User: Codable, Identifiable {
     let id: String
     let name: String
     let email: String
+    let username: String?
+    let firstName: String?
+    let lastName: String?
     let phone: String?
     let whatsapp: String?
     let role: UserRole
     let emailVerified: Bool
+    let profilePicture: String?
     let createdAt: Date
     
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case name
         case email
+        case username
+        case firstName
+        case lastName
         case phone
         case whatsapp
         case role
-        case emailVerified
+        case emailVerified = "isEmailVerified"
+        case profilePicture
         case createdAt
     }
 }
@@ -56,6 +64,12 @@ struct TokenResponse: Codable {
 struct ListingsResponse: Codable {
     let listings: [BusinessListing]
     let total: Int
+    let filters: ListingsFilters?
+}
+
+struct ListingsFilters: Codable {
+    let page: Int
+    let limit: Int
 }
 
 struct MessageResponse: Codable {
@@ -78,4 +92,8 @@ struct LoginRequest: Codable {
 
 struct GoogleLoginRequest: Codable {
     let idToken: String
+
+    enum CodingKeys: String, CodingKey {
+        case idToken = "token"
+    }
 }

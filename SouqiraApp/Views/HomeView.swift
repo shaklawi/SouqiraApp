@@ -2,8 +2,6 @@
 //  HomeView.swift
 //  Souqira
 //
-//  Created on 17/02/2026
-//
 
 import SwiftUI
 
@@ -17,57 +15,13 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Elegant gradient background
-                LinearGradient(
-                    colors: [
-                        Color.blue.opacity(0.05),
-                        Color.purple.opacity(0.05),
-                        Color.white
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .ignoresSafeArea()
+                LinearGradient(colors: [Color.blue.opacity(0.05), Color.purple.opacity(0.05), Color.white], startPoint: .topLeading, endPoint: .bottomTrailing).ignoresSafeArea()
                 
                 ScrollView {
                     VStack(spacing: 0) {
-                        // Error Banner
-                        if let errorMessage = viewModel.errorMessage {
-                            HStack {
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                Text(errorMessage)
-                                Spacer()
-                                Button("Retry") {
-                                    Task {
-                                        await viewModel.fetchListings(refresh: true)
-                                    }
-                                }
-                                .buttonStyle(.bordered)
-                            }
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .fill(Color.yellow.opacity(0.1))
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 16)
-                                            .stroke(Color.yellow.opacity(0.3), lineWidth: 1)
-                                    )
-                            )
-                            .padding(.horizontal)
-                            .padding(.top, 8)
-                        }
-                        
-                        // Hero Section
                         heroSection
-                        
-                        // Search & Filters
-                        searchAndFilterSection
-                            .padding(.horizontal)
-                            .padding(.top, 24)
-                        
-                        // Listings Grid
-                        listingsSection
-                            .padding(.top, 32)
+                        searchAndFilterSection.padding(.horizontal).padding(.top, 24)
+                        listingsSection.padding(.top, 32)
                     }
                 }
             }
@@ -76,24 +30,12 @@ struct HomeView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { showSettingsSheet = true }) {
-                        Image(systemName: "gearshape.fill")
-                            .font(.title3)
-                            .foregroundStyle(
-                                LinearGradient(
-                                    colors: [.blue, .purple],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
+                        Image(systemName: "gearshape.fill").font(.title3).foregroundStyle(LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
                     }
                 }
             }
-            .sheet(isPresented: $showFilters) {
-                FilterView(viewModel: viewModel)
-            }
-            .sheet(isPresented: $showSettingsSheet) {
-                SettingsSheet()
-            }
+            .sheet(isPresented: $showFilters) { FilterView(viewModel: viewModel) }
+            .sheet(isPresented: $showSettingsSheet) { SettingsSheet() }
             .task {
                 if viewModel.listings.isEmpty {
                     await viewModel.fetchListings(refresh: true)
@@ -103,254 +45,107 @@ struct HomeView: View {
     }
     
     private var heroSection: some View {
-        ZStack {
-            // Mesh gradient background
-            LinearGradient(
-                colors: [
-                    Color.blue.opacity(0.8),
-                    Color.purple.opacity(0.6),
-                    Color.pink.opacity(0.4)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
+        ZStack(alignment: .center) {
+            LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 0.2, green: 0.4, blue: 0.95), location: 0), .init(color: Color(red: 0.6, green: 0.2, blue: 0.8), location: 0.6), .init(color: Color(red: 0.95, green: 0.3, blue: 0.5), location: 1)]), startPoint: .topLeading, endPoint: .bottomTrailing).ignoresSafeArea()
             
-            // Floating circles decoration
-            GeometryReader { geometry in
-                Circle()
-                    .fill(Color.white.opacity(0.1))
-                    .frame(width: 150, height: 150)
-                    .offset(x: -50, y: -30)
-                
-                Circle()
-                    .fill(Color.white.opacity(0.08))
-                    .frame(width: 200, height: 200)
-                    .offset(x: geometry.size.width - 100, y: geometry.size.height - 100)
+            VStack(spacing: 0) {
+                Circle().fill(Color.white.opacity(0.15)).frame(width: 300, height: 300).offset(x: -100, y: -150)
+                Spacer()
             }
             
-            VStack(spacing: 20) {
-                // Icon with gradient
+            Circle().fill(Color.white.opacity(0.1)).frame(width: 250, height: 250).offset(x: 150, y: 180)
+            
+            VStack(spacing: 28) {
                 ZStack {
-                    Circle()
-                        .fill(Color.white.opacity(0.2))
-                        .frame(width: 80, height: 80)
-                        .blur(radius: 20)
-                    
-                    Image(systemName: "building.2.fill")
-                        .font(.system(size: 40))
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [.white, .white.opacity(0.9)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
+                    Circle().fill(Color.white.opacity(0.25)).frame(width: 110, height: 110).blur(radius: 35)
+                    Circle().fill(Color.white.opacity(0.15)).frame(width: 95, height: 95)
+                    Image(systemName: "building.2.fill").font(.system(size: 50, weight: .bold)).foregroundStyle(LinearGradient(colors: [.white, .white.opacity(0.85)], startPoint: .topLeading, endPoint: .bottomTrailing))
                 }
-                .padding(.top, 20)
                 
-                Text(LocalizationManager.heroTitle.get(language: appSettings.language))
-                    .font(.system(size: 32, weight: .bold, design: .rounded))
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(.white)
-                    .padding(.horizontal)
-                    .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
-                
-                Text(LocalizationManager.heroSubtitle.get(language: appSettings.language))
-                    .font(.system(size: 17, weight: .medium))
-                    .foregroundColor(.white.opacity(0.95))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 32)
+                VStack(spacing: 14) {
+                    Text(LocalizationManager.heroTitle.get(language: appSettings.language)).font(.system(size: 38, weight: .bold, design: .rounded)).foregroundColor(.white).multilineTextAlignment(.center).lineSpacing(2)
+                    Text(LocalizationManager.heroSubtitle.get(language: appSettings.language)).font(.system(size: 16, weight: .medium)).foregroundColor(.white.opacity(0.92)).multilineTextAlignment(.center)
+                }
+                .padding(.horizontal, 24)
                 
                 Button(action: { showSettingsSheet = true }) {
-                    HStack(spacing: 10) {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title3)
-                        Text(LocalizationManager.createAd.get(language: appSettings.language))
-                            .font(.system(size: 17, weight: .semibold))
+                    HStack(spacing: 14) {
+                        Image(systemName: "plus.circle.fill").font(.system(size: 20, weight: .bold))
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(LocalizationManager.createAd.get(language: appSettings.language)).font(.system(size: 17, weight: .bold))
+                            Text("Start selling").font(.system(size: 11, weight: .medium)).opacity(0.85)
+                        }
+                        Spacer()
+                        Image(systemName: "arrow.right.circle.fill").font(.system(size: 18, weight: .semibold))
                     }
-                    .foregroundColor(.blue)
-                    .padding(.horizontal, 32)
-                    .padding(.vertical, 16)
-                    .background(
-                        Capsule()
-                            .fill(Color.white)
-                            .shadow(color: .black.opacity(0.15), radius: 20, x: 0, y: 10)
-                    )
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 26)
+                    .padding(.vertical, 18)
+                    .background(LinearGradient(gradient: Gradient(colors: [Color(red: 1.0, green: 0.4, blue: 0.3), Color(red: 0.95, green: 0.2, blue: 0.4)]), startPoint: .topLeading, endPoint: .bottomTrailing))
+                    .cornerRadius(18)
+                    .shadow(color: Color(red: 1.0, green: 0.4, blue: 0.3).opacity(0.5), radius: 24, x: 0, y: 12)
                 }
-                .padding(.bottom, 32)
+                .padding(.bottom, 20)
             }
-            .frame(maxWidth: .infinity)
         }
-        .frame(height: 340)
-        .clipShape(RoundedRectangle(cornerRadius: 0))
+        .frame(height: 440)
     }
     
     private var searchAndFilterSection: some View {
         VStack(spacing: 16) {
-            // Modern Search Bar with glassmorphism
             HStack(spacing: 12) {
-                Image(systemName: "magnifyingglass")
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [.blue, .purple],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                
-                TextField(LocalizationManager.searchBusinesses.get(language: appSettings.language), text: $viewModel.searchQuery)
-                    .textFieldStyle(.plain)
-                    .font(.system(size: 16))
-                    .onSubmit {
-                        Task {
-                            await viewModel.applyFilters()
-                        }
-                    }
-                
+                Image(systemName: "magnifyingglass").font(.system(size: 18, weight: .semibold)).foregroundStyle(LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
+                TextField(LocalizationManager.searchBusinesses.get(language: appSettings.language), text: $viewModel.searchQuery).textFieldStyle(.plain).font(.system(size: 16))
                 if !viewModel.searchQuery.isEmpty {
-                    Button(action: {
-                        viewModel.searchQuery = ""
-                        Task {
-                            await viewModel.applyFilters()
-                        }
-                    }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(.secondary)
+                    Button(action: { viewModel.searchQuery = ""; Task { await viewModel.fetchListings(refresh: true) } }) {
+                        Image(systemName: "xmark.circle.fill").font(.system(size: 16)).foregroundColor(.gray)
                     }
                 }
             }
-            .padding(16)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(Color(.systemBackground))
-                    .shadow(color: .black.opacity(0.06), radius: 15, x: 0, y: 5)
-            )
+            .padding(12)
+            .background(Color.white)
+            .cornerRadius(12)
+            .shadow(color: .black.opacity(0.06), radius: 10, x: 0, y: 4)
             
-            // Filter Pills with modern design
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 10) {
-                    Button(action: { showFilters = true }) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "slider.horizontal.3")
-                                .font(.system(size: 14, weight: .semibold))
-                            Text(LocalizationManager.filters.get(language: appSettings.language))
-                                .font(.system(size: 15, weight: .semibold))
-                        }
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 12)
-                        .background(
-                            LinearGradient(
-                                colors: [.blue, .purple],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .clipShape(Capsule())
-                        .shadow(color: .blue.opacity(0.3), radius: 10, x: 0, y: 5)
-                    }
-                    
-                    if let category = viewModel.selectedCategory {
-                        modernFilterPill(text: category.nameEn, icon: "tag.fill") {
-                            viewModel.selectedCategory = nil
-                            Task { await viewModel.applyFilters() }
-                        }
-                    }
-                    
-                    if let region = viewModel.selectedRegion {
-                        modernFilterPill(text: "\(region.emoji) \(region.nameEn)", icon: "mappin.circle.fill") {
-                            viewModel.selectedRegion = nil
-                            Task { await viewModel.applyFilters() }
-                        }
-                    }
+            Button(action: { showFilters = true }) {
+                HStack(spacing: 8) {
+                    Image(systemName: "slider.horizontal.3").font(.system(size: 16, weight: .semibold))
+                    Text(LocalizationManager.filters.get(language: appSettings.language)).font(.system(size: 15, weight: .semibold))
                 }
-                .padding(.horizontal, 4)
+                .foregroundColor(.white)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
+                .background(Color.blue)
+                .cornerRadius(10)
             }
         }
-    }
-    
-    private func modernFilterPill(text: String, icon: String, onRemove: @escaping () -> Void) -> some View {
-        HStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(.system(size: 12, weight: .semibold))
-            Text(text)
-                .font(.system(size: 14, weight: .medium))
-            Button(action: onRemove) {
-                Image(systemName: "xmark.circle.fill")
-                    .font(.system(size: 14))
-                    .foregroundColor(.secondary)
-            }
-        }
-        .foregroundColor(.primary)
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
-        .background(
-            Capsule()
-                .fill(Color(.systemGray6))
-        )
     }
     
     private var listingsSection: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            VStack(alignment: .leading, spacing: 8) {
-                Text(LocalizationManager.allBusinessListings.get(language: appSettings.language))
-                    .font(.system(size: 28, weight: .bold, design: .rounded))
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [.primary, .primary.opacity(0.8)],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                
-                Text(LocalizationManager.discoverOpportunities.get(language: appSettings.language))
-                    .font(.system(size: 16))
-                    .foregroundColor(.secondary)
-            }
-            .padding(.horizontal)
-            
+        VStack(spacing: 20) {
             if viewModel.isLoading && viewModel.listings.isEmpty {
+                ProgressView().frame(maxWidth: .infinity).padding(.vertical, 40)
+            } else if viewModel.listings.isEmpty {
                 VStack(spacing: 16) {
-                    ProgressView()
-                        .scaleEffect(1.2)
-                        .tint(.blue)
-                    Text("Loading amazing businesses...")
-                        .font(.system(size: 15))
-                        .foregroundColor(.secondary)
+                    Image(systemName: "building.2.fill").font(.system(size: 60)).foregroundStyle(LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
+                    Text("No listings").font(.system(size: 18, weight: .semibold))
+                    Text("Check back later").font(.system(size: 14)).foregroundColor(.secondary)
                 }
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 60)
-            } else if viewModel.listings.isEmpty {
-                EmptyStateView()
+                .padding(.vertical, 80)
             } else {
-                VStack(spacing: 20) {
-                    ForEach(Array(stride(from: 0, to: viewModel.listings.count, by: 2)), id: \.self) { index in
-                        HStack(spacing: 16) {
-                            NavigationLink(destination: ListingDetailView(listing: viewModel.listings[index])) {
-                                ListingCard(listing: viewModel.listings[index])
-                            }
-                            .buttonStyle(.plain)
-                            
-                            if index + 1 < viewModel.listings.count {
-                                NavigationLink(destination: ListingDetailView(listing: viewModel.listings[index + 1])) {
-                                    ListingCard(listing: viewModel.listings[index + 1])
-                                }
-                                .buttonStyle(.plain)
-                            } else {
-                                Spacer()
-                                    .frame(width: 180)
-                            }
+                LazyVStack(spacing: 20) {
+                    ForEach(viewModel.listings) { listing in
+                        NavigationLink(destination: ListingDetailView(listing: listing)) {
+                            ListingCard(listing: listing)
                         }
+                        .buttonStyle(.plain)
                     }
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, 16)
                 
                 if viewModel.hasMorePages {
                     ProgressView()
-                        .scaleEffect(1.1)
-                        .tint(.blue)
-                        .frame(maxWidth: .infinity)
                         .padding(.vertical, 24)
                         .onAppear {
                             Task {
@@ -360,50 +155,7 @@ struct HomeView: View {
                 }
             }
         }
-        .padding(.bottom, 100) // Extra padding for tab bar
-    }
-}
-
-struct EmptyStateView: View {
-    @EnvironmentObject var appSettings: AppSettings
-    
-    var body: some View {
-        VStack(spacing: 24) {
-            ZStack {
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [.blue.opacity(0.1), .purple.opacity(0.1)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 120, height: 120)
-                
-                Image(systemName: "building.2")
-                    .font(.system(size: 50))
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [.blue, .purple],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-            }
-            
-            VStack(spacing: 8) {
-                Text(LocalizationManager.noListingsFound.get(language: appSettings.language))
-                    .font(.system(size: 22, weight: .bold))
-                
-                Text(LocalizationManager.adjustFilters.get(language: appSettings.language))
-                    .font(.system(size: 16))
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 80)
-        .padding(.horizontal, 32)
+        .padding(.bottom, 40)
     }
 }
 

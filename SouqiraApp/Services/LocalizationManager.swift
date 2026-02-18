@@ -339,6 +339,18 @@ class LocalizationManager: ObservableObject {
         ar: "اكتب رسالة...",
         ku: "نامەیەک بنووسە..."
     )
+    
+    static let exploreCities = LocalizedString(
+        en: "Explore Cities",
+        ar: "استكشف المدن",
+        ku: "شارەکان بگەڕێ"
+    )
+    
+    static let discoverBusinessOpportunities = LocalizedString(
+        en: "Discover business opportunities across Iraq's major cities",
+        ar: "اكتشف الفرص التجارية في المدن الرئيسية في العراق",
+        ku: "دۆزینەوەی دەرفەتە بازرگانییەکان لە شارە سەرەکییەکانی عێراق"
+    )
 }
 
 // MARK: - LocalizedString Helper

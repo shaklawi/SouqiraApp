@@ -115,19 +115,39 @@ class NetworkManager: ObservableObject {
             
             print("✅ Response status: \(httpResponse.statusCode)")
             
+            // Log response body for debugging
+            if let bodyString = String(data: data, encoding: .utf8) {
+                print("📦 Response body: \(bodyString.prefix(500))")
+            }
+            
             guard (200...299).contains(httpResponse.statusCode) else {
                 if httpResponse.statusCode == 401 {
                     print("❌ Unauthorized (401)")
+                    
+                    // Try to decode error message from response
+                    if let errorDict = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                        print("❌ Error response: \(errorDict)")
+                        if let error = errorDict["error"] as? [String: Any],
+                           let message = error["message"] as? String {
+                            throw NetworkError.serverError(message)
+                        }
+                    }
+                    
                     throw NetworkError.unauthorized
                 }
-                
+
                 // Try to decode error message from response
                 if let errorDict = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
                    let message = errorDict["message"] as? String {
                     print("❌ Server error: \(message)")
                     throw NetworkError.serverError(message)
                 }
-                
+
+                if let bodyString = String(data: data, encoding: .utf8), !bodyString.isEmpty {
+                    print("❌ Server error body: \(bodyString)")
+                    throw NetworkError.serverError("Server error \(httpResponse.statusCode): \(bodyString)")
+                }
+
                 print("❌ Server error: \(httpResponse.statusCode)")
                 throw NetworkError.serverError("Server error: \(httpResponse.statusCode)")
             }

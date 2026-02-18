@@ -11,9 +11,9 @@ struct ListingCard: View {
     let listing: BusinessListing
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Image with gradient overlay
-            ZStack(alignment: .topTrailing) {
+        HStack(spacing: 0) {
+            // Image section - larger and more prominent
+            ZStack(alignment: .topLeading) {
                 AsyncImage(url: URL(string: listing.images.first ?? "")) { image in
                     image
                         .resizable()
@@ -22,79 +22,69 @@ struct ListingCard: View {
                     ZStack {
                         LinearGradient(
                             colors: [
-                                Color.blue.opacity(0.1),
-                                Color.purple.opacity(0.08)
+                                Color.blue.opacity(0.15),
+                                Color.purple.opacity(0.12)
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
                         
-                        Image(systemName: "building.2")
-                            .font(.system(size: 32))
+                        Image(systemName: "building.2.fill")
+                            .font(.system(size: 38, weight: .semibold))
                             .foregroundStyle(
                                 LinearGradient(
-                                    colors: [.blue.opacity(0.4), .purple.opacity(0.4)],
+                                    colors: [.blue.opacity(0.5), .purple.opacity(0.5)],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 )
                             )
                     }
                 }
-                .frame(width: 180, height: 140)
+                .frame(width: 130, height: 130)
                 .clipped()
                 
-                // Gradient overlay for better text contrast
-                LinearGradient(
-                    colors: [
-                        Color.black.opacity(0.0),
-                        Color.black.opacity(0.2)
-                    ],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .frame(width: 180, height: 140)
-                
-                // Featured badge
+                // Featured badge - repositioned
                 if listing.isFeatured == true {
-                    HStack(spacing: 4) {
+                    HStack(spacing: 3) {
                         Image(systemName: "star.fill")
-                            .font(.system(size: 10))
-                        Text("Featured")
-                            .font(.system(size: 11, weight: .semibold))
+                            .font(.system(size: 9, weight: .bold))
+                        Text("مميز")
+                            .font(.system(size: 10, weight: .bold))
                     }
                     .foregroundColor(.white)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 6)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 5)
                     .background(
                         Capsule()
                             .fill(
                                 LinearGradient(
-                                    colors: [.orange, .red],
+                                    colors: [Color(red: 1.0, green: 0.6, blue: 0.0), Color(red: 1.0, green: 0.3, blue: 0.3)],
                                     startPoint: .leading,
                                     endPoint: .trailing
                                 )
                             )
-                            .shadow(color: .orange.opacity(0.5), radius: 8, x: 0, y: 2)
+                            .shadow(color: .orange.opacity(0.4), radius: 6, x: 0, y: 2)
                     )
-                    .padding(8)
+                    .padding(10)
                 }
             }
+            .frame(width: 130)
             
-            // Content with better spacing
-            VStack(spacing: 6) {
-                // Title with better typography
+            // Content section - more spacious
+            VStack(alignment: .leading, spacing: 8) {
+                // Title - larger and bolder
                 Text(listing.title)
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.system(size: 17, weight: .bold, design: .rounded))
                     .lineLimit(2)
                     .truncationMode(.tail)
                     .foregroundColor(.primary)
-                    .frame(width: 160, height: 38, alignment: .topLeading)
                     .multilineTextAlignment(.leading)
+                    .lineSpacing(2)
                 
-                // Location with icon
-                HStack(spacing: 4) {
-                    Image(systemName: "mappin.circle.fill")
-                        .font(.system(size: 10))
+                // Location with better icon
+                HStack(spacing: 6) {
+                    Image(systemName: "location.fill")
+                        .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(
                             LinearGradient(
                                 colors: [.blue, .purple],
@@ -103,21 +93,21 @@ struct ListingCard: View {
                             )
                         )
                     Text(listing.location.capitalized)
-                        .font(.system(size: 11))
+                        .font(.system(size: 14, weight: .medium))
                         .lineLimit(1)
                         .foregroundColor(.secondary)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
                 
-                Spacer(minLength: 0)
+                Spacer(minLength: 4)
                 
-                // Price & Views with modern design
-                HStack(alignment: .center, spacing: 8) {
+                // Bottom row with price and views
+                HStack(alignment: .center, spacing: 10) {
+                    // Price - prominent and colorful
                     Text(listing.formattedPrice)
-                        .font(.system(size: 13, weight: .bold))
+                        .font(.system(size: 18, weight: .heavy, design: .rounded))
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [.blue, .purple],
+                                colors: [Color(red: 0.2, green: 0.5, blue: 1.0), Color(red: 0.6, green: 0.3, blue: 0.9)],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -126,35 +116,44 @@ struct ListingCard: View {
                     
                     Spacer()
                     
-                    HStack(spacing: 4) {
+                    // Views counter - subtle but visible
+                    HStack(spacing: 5) {
                         Image(systemName: "eye.fill")
-                            .font(.system(size: 9))
+                            .font(.system(size: 11, weight: .semibold))
                         Text("\(listing.views)")
-                            .font(.system(size: 10, weight: .medium))
+                            .font(.system(size: 13, weight: .semibold))
                     }
                     .foregroundColor(.secondary)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
                     .background(
                         Capsule()
-                            .fill(Color(.systemGray6))
+                            .fill(Color(.systemGray5))
                     )
                 }
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 10)
-            .frame(width: 180, height: 80)
+            .padding(.leading, 14)
+            .padding(.trailing, 16)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .frame(width: 180, height: 220)
+        .frame(height: 130)
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: 18)
                 .fill(Color(.systemBackground))
         )
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.08), radius: 12, x: 0, y: 6)
+        .clipShape(RoundedRectangle(cornerRadius: 18))
+        .shadow(color: .black.opacity(0.06), radius: 16, x: 0, y: 4)
         .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color.gray.opacity(0.1), lineWidth: 0.5)
+            RoundedRectangle(cornerRadius: 18)
+                .stroke(
+                    LinearGradient(
+                        colors: [Color.blue.opacity(0.15), Color.purple.opacity(0.1)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1
+                )
         )
     }
 }
