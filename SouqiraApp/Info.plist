@@ -25,14 +25,16 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.595247213772-3ukmsq3cnpv5grq118pni4kc7nq6iutg</string>
+				<string>com.googleusercontent.apps.595247213772-75tthlksh64g6oe8bdnujslans1o0asu</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>GIDClientID</key>
-	<string>595247213772-3ukmsq3cnpv5grq118pni4kc7nq6iutg.apps.googleusercontent.com</string>
+	<string>595247213772-75tthlksh64g6oe8bdnujslans1o0asu.apps.googleusercontent.com</string>
+	<key>GIDServerClientID</key>
+	<string>595247213772-uteg00fanualq5be1l9hs0pf9ccre1re.apps.googleusercontent.com</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
@@ -41,8 +43,6 @@
 	<string>We need access to your photo library to upload business images</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need your location to show nearby business listings and help buyers find businesses in their area</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>This allows us to provide you with personalized content and improve your experience</string>
 	<key>NSContactsUsageDescription</key>
 	<string>We need access to your contacts to help you share business listings with friends</string>
 	<key>NSMicrophoneUsageDescription</key>
