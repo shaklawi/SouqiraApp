@@ -286,7 +286,7 @@ fun ListingDetailScreen(
                         }
 
                         Text(
-                            text = listing.category.replace("_", " "),
+                            text = listingDetailCategoryLabel(listing.category),
                             color = Color(0xFF1A4D7C),
                             style = MaterialTheme.typography.labelLarge,
                             modifier = Modifier
@@ -329,7 +329,13 @@ fun ListingDetailScreen(
                             .padding(horizontal = 20.dp),
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        MetaChip("${listing.views} views")
+                        MetaChip(
+                            pluralStringResource(
+                                id = R.plurals.listing_views_count,
+                                count = listing.views,
+                                listing.views
+                            )
+                        )
                         MetaChip(listing.location)
                         if (listing.isFeatured == true) {
                             MetaChip(
@@ -705,6 +711,41 @@ private fun MapSection(
                 fontWeight = FontWeight.SemiBold
             )
         }
+    }
+}
+
+@Composable
+private fun listingDetailCategoryLabel(categoryId: String): String {
+    val normalizedCategoryId = categoryId
+        .trim()
+        .lowercase()
+        .replace("-", "_")
+        .replace(" ", "_")
+
+    return when (normalizedCategoryId) {
+        "restaurants_cafes" -> stringResource(R.string.category_restaurants_cafes)
+        "retail_stores" -> stringResource(R.string.category_retail_stores)
+        "auto_services" -> stringResource(R.string.category_auto_services)
+        "beauty_salons" -> stringResource(R.string.category_beauty_salons)
+        "ecommerce_online_business" -> stringResource(R.string.category_ecommerce_online_business)
+        "it_tech" -> stringResource(R.string.category_it_tech)
+        "medical_health_services" -> stringResource(R.string.category_medical_health_services)
+        "education_training" -> stringResource(R.string.category_education_training)
+        "real_estate_construction" -> stringResource(R.string.category_real_estate_construction)
+        "transport_logistics" -> stringResource(R.string.category_transport_logistics)
+        "manufacturing_industry" -> stringResource(R.string.category_manufacturing_industry)
+        "agriculture_food_production" -> stringResource(R.string.category_agriculture_food_production)
+        "financial_accounting_services" -> stringResource(R.string.category_financial_accounting_services)
+        "marketing_advertising" -> stringResource(R.string.category_marketing_advertising)
+        "tourism_travel" -> stringResource(R.string.category_tourism_travel)
+        "freelance_services" -> stringResource(R.string.category_freelance_services)
+        "home_based_businesses" -> stringResource(R.string.category_home_based_businesses)
+        "cleaning_maintenance" -> stringResource(R.string.category_cleaning_maintenance)
+        "wholesale_distribution" -> stringResource(R.string.category_wholesale_distribution)
+        "other" -> stringResource(R.string.category_other)
+        "find_a_partner" -> stringResource(R.string.category_find_a_partner)
+        "find_an_investor" -> stringResource(R.string.category_find_an_investor)
+        else -> categoryId
     }
 }
 
