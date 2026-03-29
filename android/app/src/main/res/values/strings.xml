@@ -1,0 +1,154 @@
+<resources>
+    <string name="app_name">Souqira</string>
+    <string name="google_web_client_id" translatable="false">595247213772-uteg00fanualq5be1l9hs0pf9ccre1re.apps.googleusercontent.com</string>
+
+    <string name="nav_home">Home</string>
+    <string name="nav_cities">Cities</string>
+    <string name="nav_favorites">Favorites</string>
+    <string name="nav_messages">Messages</string>
+    <string name="nav_profile">Profile</string>
+
+    <string name="cities_title">Cities</string>
+    <string name="cities_explore_title">Explore cities</string>
+    <string name="cities_no_match">No matching cities</string>
+    <string name="cities_card_hint">Tap to browse listings in this city</string>
+    <string name="business_marketplace">Business marketplace</string>
+    <string name="home_featured_listings">Featured Listings</string>
+    <string name="home_all_listings">All Listings</string>
+    <string name="home_badge_featured">Featured</string>
+    <string name="search_home_hint">Search by business name, category, location, or keyword</string>
+    <string name="search_cities_hint">Search by city, area, or governorate</string>
+    <string name="filter_all">All</string>
+    <string name="back">Back</string>
+    <string name="ui_back">Back</string>
+    <string name="ui_share">Share</string>
+    <string name="ui_share_chooser_title">Share</string>
+    <string name="ui_favorite">Favorite</string>
+    <string name="ui_not_favorite">Not favorite</string>
+    <string name="ui_map">Map</string>
+    <string name="currency_usd">USD</string>
+    <string name="currency_iqd">IQD</string>
+
+    <string name="auth_welcome_title">Welcome to Souqira</string>
+    <string name="auth_welcome_subtitle">Create an account to post ads</string>
+    <string name="auth_terms_agree">I agree to the Terms and Conditions</string>
+    <string name="auth_signin_email">Sign in with Email</string>
+    <string name="auth_signin_whatsapp">Sign in with WhatsApp</string>
+    <string name="auth_email">Email</string>
+    <string name="auth_password">Password</string>
+    <string name="auth_login">Login</string>
+    <string name="auth_continue_google">Continue with Google</string>
+    <string name="auth_whatsapp_phone">WhatsApp phone number</string>
+    <string name="auth_whatsapp_send_otp">Send WhatsApp code</string>
+    <string name="auth_whatsapp_otp">6-digit code</string>
+    <string name="auth_whatsapp_verify_login">Verify code and login</string>
+    <string name="auth_google_failed">Google sign-in failed</string>
+    <string name="auth_google_not_configured">Google sign-in is not configured</string>
+
+    <string name="messages_title">Messages</string>
+    <string name="messages_empty">No messages yet</string>
+    <string name="messages_chat_fallback">Chat</string>
+    <string name="messages_write">Write message</string>
+    <string name="messages_send">Send</string>
+    <string name="messages_user_fallback">User</string>
+    <string name="listing_contact_seller">Contact seller</string>
+    <string name="listing_send_message">Send message in app</string>
+    <string name="listing_status_sold">SOLD</string>
+    <plurals name="listing_views_count">
+        <item quantity="one">%1$d view</item>
+        <item quantity="other">%1$d views</item>
+    </plurals>
+    <string name="listing_description_title">Description</string>
+    <string name="listing_location_title">Location</string>
+    <string name="listing_open_in_maps">Open in Google Maps</string>
+
+    <string name="create_listing_title">Create Listing</string>
+    <string name="create_listing_field_title">Title</string>
+    <string name="create_listing_field_description">Description</string>
+    <string name="create_listing_field_price">Price</string>
+    <string name="create_listing_category">Category</string>
+    <string name="create_listing_select_category">Select category</string>
+    <string name="create_listing_region">Region</string>
+    <string name="create_listing_select_region">Select region</string>
+    <string name="create_listing_phone">Phone</string>
+    <string name="create_listing_whatsapp_optional">WhatsApp (optional)</string>
+    <string name="create_listing_address_optional">Address (optional)</string>
+    <string name="create_listing_add_photos">Add photos (max 5)</string>
+    <string name="create_listing_selected_image">Selected image</string>
+    <string name="create_listing_submit">Create listing</string>
+
+    <string name="favorites_empty">No favorites yet</string>
+    <string name="favorites_remove">Remove</string>
+
+    <string name="profile_title">Profile</string>
+    <string name="profile_account">Account</string>
+    <string name="profile_name">Name</string>
+    <string name="profile_email">Email</string>
+    <string name="profile_role">Role</string>
+    <string name="profile_logout">Logout</string>
+    <string name="profile_welcome">Welcome</string>
+    <string name="profile_login_prompt">Log in to see your profile, favorites and messages.</string>
+    <string name="profile_go_to_login">Go to login</string>
+    <string name="profile_language">Language</string>
+    <string name="profile_select_language">Select Language</string>
+    <string name="done">Done</string>
+    <string name="lang_english">English</string>
+    <string name="lang_arabic">Arabic</string>
+    <string name="lang_kurdish">Kurdish</string>
+    <string name="profile_default_user">Souqira User</string>
+    <string name="profile_no_email">No email</string>
+    <string name="profile_user_role_default">user</string>
+    <string name="profile_delete_account">Delete account</string>
+    <string name="profile_delete_account_title">Delete account?</string>
+    <string name="profile_delete_account_message">This action will permanently remove your account and related data.</string>
+    <string name="profile_delete_account_cancel">Cancel</string>
+    <string name="profile_delete_account_confirm">Delete</string>
+
+    <string name="listing_block_user">Block user</string>
+    <string name="listing_report_listing">Report listing</string>
+    <string name="listing_block_user_title">Block this user?</string>
+    <string name="listing_block_user_message">You will stop receiving messages from this user.</string>
+    <string name="listing_report_title">Report listing</string>
+    <string name="listing_report_message">Choose a reason for reporting this listing:</string>
+    <string name="listing_action_cancel">Cancel</string>
+    <string name="listing_action_block">Block</string>
+    <string name="report_reason_spam">Spam</string>
+    <string name="report_reason_inappropriate">Inappropriate content</string>
+    <string name="report_reason_fake">Fake listing</string>
+    <string name="report_reason_scam">Scam</string>
+    <string name="report_reason_other">Other</string>
+
+    <string name="category_restaurants_cafes">Restaurants &amp; Cafes</string>
+    <string name="category_retail_stores">Retail Stores</string>
+    <string name="category_auto_services">Auto Services</string>
+    <string name="category_beauty_salons">Beauty Salons</string>
+    <string name="category_ecommerce_online_business">E-Commerce &amp; Online</string>
+    <string name="category_it_tech">IT &amp; Technology</string>
+    <string name="category_medical_health_services">Medical &amp; Health</string>
+    <string name="category_education_training">Education &amp; Training</string>
+    <string name="category_real_estate_construction">Real Estate &amp; Construction</string>
+    <string name="category_transport_logistics">Transport &amp; Logistics</string>
+    <string name="category_manufacturing_industry">Manufacturing &amp; Industry</string>
+    <string name="category_agriculture_food_production">Agriculture &amp; Food</string>
+    <string name="category_financial_accounting_services">Financial &amp; Accounting</string>
+    <string name="category_marketing_advertising">Marketing &amp; Advertising</string>
+    <string name="category_tourism_travel">Tourism &amp; Travel</string>
+    <string name="category_freelance_services">Freelance Services</string>
+    <string name="category_home_based_businesses">Home Based Business</string>
+    <string name="category_cleaning_maintenance">Cleaning &amp; Maintenance</string>
+    <string name="category_wholesale_distribution">Wholesale &amp; Distribution</string>
+    <string name="category_other">Other</string>
+    <string name="category_find_a_partner">Find a Partner</string>
+    <string name="category_find_an_investor">Find an Investor</string>
+
+    <string name="region_baghdad">Baghdad</string>
+    <string name="region_basra">Basra</string>
+    <string name="region_erbil">Erbil</string>
+    <string name="region_mosul">Mosul</string>
+    <string name="region_sulaymaniyah">Sulaymaniyah</string>
+    <string name="region_najaf">Najaf</string>
+    <string name="region_karbala">Karbala</string>
+    <string name="region_kirkuk">Kirkuk</string>
+    <string name="region_duhok">Duhok</string>
+    <string name="region_ramadi">Ramadi</string>
+</resources>

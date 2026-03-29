@@ -130,7 +130,7 @@ fun CreateListingScreen(
             FilterChip(
                 selected = currency == "USD",
                 onClick = { currency = "USD" },
-                label = { Text("USD") },
+                label = { Text(stringResource(R.string.currency_usd)) },
                 modifier = Modifier.weight(1f),
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = Color(0xFF0A4F66),
@@ -140,7 +140,7 @@ fun CreateListingScreen(
             FilterChip(
                 selected = currency == "IQD",
                 onClick = { currency = "IQD" },
-                label = { Text("IQD") },
+                label = { Text(stringResource(R.string.currency_iqd)) },
                 modifier = Modifier.weight(1f),
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = Color(0xFF0A4F66),
