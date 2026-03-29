@@ -51,6 +51,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -405,14 +406,24 @@ fun ListingsScreen(
                         ) {
                             Column {
                                 if (listing.images.isNotEmpty()) {
-                                    AsyncImage(
-                                        model = listing.images.first(),
-                                        contentDescription = listing.title,
-                                        contentScale = ContentScale.Crop,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(150.dp)
-                                    )
+                                    Box {
+                                        AsyncImage(
+                                            model = listing.images.first(),
+                                            contentDescription = listing.title,
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(150.dp)
+                                        )
+
+                                        if (listing.saleStatus.equals("sold", ignoreCase = true)) {
+                                            SoldWatermark(
+                                                modifier = Modifier
+                                                    .align(Alignment.Center)
+                                                    .padding(horizontal = 12.dp)
+                                            )
+                                        }
+                                    }
                                 }
 
                                 Column(modifier = Modifier.padding(14.dp)) {
@@ -556,6 +567,14 @@ private fun FeaturedListingCard(
                     )
                 }
 
+                if (listing.saleStatus.equals("sold", ignoreCase = true)) {
+                    SoldWatermark(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .padding(horizontal = 12.dp)
+                    )
+                }
+
                 Box(
                     modifier = Modifier
                         .align(Alignment.BottomStart)
@@ -628,14 +647,24 @@ private fun CompactListingCard(
     ) {
         Column {
             if (listing.images.isNotEmpty()) {
-                AsyncImage(
-                    model = listing.images.first(),
-                    contentDescription = listing.title,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(140.dp)
-                )
+                Box {
+                    AsyncImage(
+                        model = listing.images.first(),
+                        contentDescription = listing.title,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(140.dp)
+                    )
+
+                    if (listing.saleStatus.equals("sold", ignoreCase = true)) {
+                        SoldWatermark(
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .padding(horizontal = 10.dp)
+                        )
+                    }
+                }
             }
             Column(modifier = Modifier.padding(10.dp)) {
                 Text(
@@ -660,6 +689,21 @@ private fun CompactListingCard(
             }
         }
     }
+}
+
+@Composable
+private fun SoldWatermark(modifier: Modifier = Modifier) {
+    Text(
+        text = stringResource(R.string.listing_status_sold),
+        color = Color.White,
+        style = MaterialTheme.typography.titleMedium,
+        fontWeight = FontWeight.ExtraBold,
+        modifier = modifier
+            .graphicsLayer(rotationZ = -18f)
+            .clip(RoundedCornerShape(12.dp))
+            .background(Color(0xCCB3261E))
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    )
 }
 
 @Composable
