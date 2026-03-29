@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -56,6 +57,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -191,15 +193,15 @@ fun ListingDetailScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     CircleIconButton(
-                        icon = {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.ui_back))
-                        },
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.ui_back),
                         onClick = onBack
                     )
 
                     Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                         CircleIconButton(
-                            icon = { Icon(Icons.Default.Share, contentDescription = stringResource(R.string.ui_share)) },
+                            imageVector = Icons.Default.Share,
+                            contentDescription = stringResource(R.string.ui_share),
                             onClick = {
                                 val sendIntent = Intent(Intent.ACTION_SEND).apply {
                                     type = "text/plain"
@@ -212,20 +214,13 @@ fun ListingDetailScreen(
                         )
 
                         CircleIconButton(
-                            icon = {
-                                if (uiState.isFavorite) {
-                                    Icon(
-                                        Icons.Default.Favorite,
-                                        contentDescription = stringResource(R.string.ui_favorite),
-                                        tint = Color(0xFFE53935)
-                                    )
-                                } else {
-                                    Icon(
-                                        Icons.Outlined.FavoriteBorder,
-                                        contentDescription = stringResource(R.string.ui_not_favorite)
-                                    )
-                                }
+                            imageVector = if (uiState.isFavorite) Icons.Default.Favorite else Icons.Outlined.FavoriteBorder,
+                            contentDescription = if (uiState.isFavorite) {
+                                stringResource(R.string.ui_favorite)
+                            } else {
+                                stringResource(R.string.ui_not_favorite)
                             },
+                            highlighted = uiState.isFavorite,
                             onClick = {
                                 if (isAuthenticated) {
                                     viewModel.toggleFavorite()
@@ -518,16 +513,32 @@ private fun ReportReasonButton(label: String, onClick: () -> Unit) {
 }
 
 @Composable
-private fun CircleIconButton(icon: @Composable () -> Unit, onClick: () -> Unit) {
+private fun CircleIconButton(
+    imageVector: ImageVector,
+    contentDescription: String,
+    onClick: () -> Unit,
+    highlighted: Boolean = false
+) {
+    val backgroundColor = if (highlighted) Color(0xFFFFF1F3) else Color.White.copy(alpha = 0.92f)
+    val borderColor = if (highlighted) Color(0xFFFF9CB0) else Color.White.copy(alpha = 0.72f)
+    val iconTint = if (highlighted) Color(0xFFB3261E) else Color(0xFF102A43)
+
     Box(
         modifier = Modifier
-            .size(38.dp)
+            .size(46.dp)
+            .shadow(elevation = 10.dp, shape = CircleShape)
             .clip(CircleShape)
-            .background(Color.Black.copy(alpha = 0.35f))
+            .background(backgroundColor)
+            .border(width = 1.dp, color = borderColor, shape = CircleShape)
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
-        icon()
+        Icon(
+            imageVector = imageVector,
+            contentDescription = contentDescription,
+            tint = iconTint,
+            modifier = Modifier.size(22.dp)
+        )
     }
 }
 
