@@ -7,6 +7,8 @@
 
 import Foundation
 import Security
+import SwiftUI
+import UIKit
 
 enum NetworkError: Error {
     case invalidURL
@@ -21,9 +23,8 @@ enum NetworkError: Error {
 
 class NetworkManager: ObservableObject {
     static let shared = NetworkManager()
-    
-    // Production API URL
-    private let baseURL = "https://api.souqira.com"
+
+    private let baseURL: String
     
     // Keychain keys
     private let accessTokenKey = "souqira.accessToken"
@@ -51,7 +52,14 @@ class NetworkManager: ObservableObject {
         }
     }
     
-    private init() {}
+    private init() {
+        if let configured = Bundle.main.object(forInfoDictionaryKey: "APIBaseURL") as? String,
+           !configured.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            baseURL = configured
+        } else {
+            baseURL = "https://api.souqira.com"
+        }
+    }
     
     func setAuthToken(_ token: String) {
         self.accessToken = token
@@ -67,7 +75,12 @@ class NetworkManager: ObservableObject {
         self.refreshToken = nil
     }
     
-    private func createRequest(endpoint: String, method: String = "GET", body: Data? = nil) -> URLRequest? {
+    private func createRequest(
+        endpoint: String,
+        method: String = "GET",
+        body: Data? = nil,
+        includeAuthorization: Bool = true
+    ) -> URLRequest? {
         guard let url = URL(string: "\(baseURL)\(endpoint)") else {
             return nil
         }
@@ -81,7 +94,7 @@ class NetworkManager: ObservableObject {
         let language = UserDefaults.standard.string(forKey: "appLanguage") ?? "en"
         request.setValue(language, forHTTPHeaderField: "Accept-Language")
         
-        if let token = accessToken {
+        if includeAuthorization, let token = accessToken {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         
@@ -91,106 +104,134 @@ class NetworkManager: ObservableObject {
         
         return request
     }
+
+    private func extractErrorMessage(from data: Data) -> String? {
+        guard let errorDict = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return nil }
+        if let nested = errorDict["error"] as? [String: Any],
+           let message = nested["message"] as? String {
+            return message
+        }
+        if let nested = errorDict["error"] as? [String: Any],
+           let messageMap = nested["message"] as? [String: Any] {
+            let combined = messageMap
+                .map { "\($0.key): \($0.value)" }
+                .sorted()
+                .joined(separator: "\n")
+            if !combined.isEmpty {
+                return combined
+            }
+        }
+        if let message = errorDict["message"] as? String {
+            return message
+        }
+        if let error = errorDict["error"] as? String {
+            return error
+        }
+        return nil
+    }
+
+    private func makeDecoder() -> JSONDecoder {
+        let decoder = JSONDecoder()
+
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+        decoder.dateDecodingStrategy = .custom { decoder in
+            let container = try decoder.singleValueContainer()
+            let dateString = try container.decode(String.self)
+
+            if let date = dateFormatter.date(from: dateString) {
+                return date
+            }
+
+            dateFormatter.formatOptions = [.withInternetDateTime]
+            if let date = dateFormatter.date(from: dateString) {
+                return date
+            }
+
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Cannot decode date string: \(dateString)")
+        }
+
+        return decoder
+    }
+
+    private func executeRequest<T: Decodable>(
+        endpoint: String,
+        method: String,
+        bodyData: Data?,
+        includeAuthorization: Bool = true,
+        retryOnUnauthorized: Bool = true
+    ) async throws -> T {
+        guard let request = createRequest(
+            endpoint: endpoint,
+            method: method,
+            body: bodyData,
+            includeAuthorization: includeAuthorization
+        ) else {
+            throw NetworkError.invalidURL
+        }
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw NetworkError.invalidResponse
+        }
+
+        if httpResponse.statusCode == 401,
+           retryOnUnauthorized,
+           endpoint != "/api/auth/refresh",
+           refreshToken != nil {
+            do {
+                try await refreshAccessToken()
+                return try await executeRequest(
+                    endpoint: endpoint,
+                    method: method,
+                    bodyData: bodyData,
+                    includeAuthorization: includeAuthorization,
+                    retryOnUnauthorized: false
+                )
+            } catch {
+                clearAuthToken()
+            }
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            if httpResponse.statusCode == 401 {
+                if let message = extractErrorMessage(from: data) {
+                    throw NetworkError.serverError(message)
+                }
+                throw NetworkError.unauthorized
+            }
+
+            if let message = extractErrorMessage(from: data) {
+                throw NetworkError.serverError(message)
+            }
+
+            if let bodyString = String(data: data, encoding: .utf8), !bodyString.isEmpty {
+                throw NetworkError.serverError("Server error \(httpResponse.statusCode): \(bodyString)")
+            }
+
+            throw NetworkError.serverError("Server error: \(httpResponse.statusCode)")
+        }
+
+        do {
+            return try makeDecoder().decode(T.self, from: data)
+        } catch {
+            throw NetworkError.decodingError
+        }
+    }
     
     func fetch<T: Decodable>(endpoint: String, method: String = "GET", body: Encodable? = nil) async throws -> T {
         var bodyData: Data?
         if let body = body {
             bodyData = try JSONEncoder().encode(body)
         }
-        
-        guard let request = createRequest(endpoint: endpoint, method: method, body: bodyData) else {
-            print("❌ Failed to create request for: \(endpoint)")
-            throw NetworkError.invalidURL
-        }
-        
-        print("📡 Making \(method) request to: \(baseURL)\(endpoint)")
-        
+
         do {
-            let (data, response) = try await URLSession.shared.data(for: request)
-            
-            guard let httpResponse = response as? HTTPURLResponse else {
-                print("❌ Invalid response type")
-                throw NetworkError.invalidResponse
-            }
-            
-            print("✅ Response status: \(httpResponse.statusCode)")
-            
-            // Log response body for debugging
-            if let bodyString = String(data: data, encoding: .utf8) {
-                print("📦 Response body: \(bodyString.prefix(500))")
-            }
-            
-            guard (200...299).contains(httpResponse.statusCode) else {
-                if httpResponse.statusCode == 401 {
-                    print("❌ Unauthorized (401)")
-                    
-                    // Try to decode error message from response
-                    if let errorDict = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
-                        print("❌ Error response: \(errorDict)")
-                        if let error = errorDict["error"] as? [String: Any],
-                           let message = error["message"] as? String {
-                            throw NetworkError.serverError(message)
-                        }
-                    }
-                    
-                    throw NetworkError.unauthorized
-                }
-
-                // Try to decode error message from response
-                if let errorDict = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                   let message = errorDict["message"] as? String {
-                    print("❌ Server error: \(message)")
-                    throw NetworkError.serverError(message)
-                }
-
-                if let bodyString = String(data: data, encoding: .utf8), !bodyString.isEmpty {
-                    print("❌ Server error body: \(bodyString)")
-                    throw NetworkError.serverError("Server error \(httpResponse.statusCode): \(bodyString)")
-                }
-
-                print("❌ Server error: \(httpResponse.statusCode)")
-                throw NetworkError.serverError("Server error: \(httpResponse.statusCode)")
-            }
-            
-            let decoder = JSONDecoder()
-            
-            // Custom date decoding strategy to handle ISO8601 with milliseconds
-            let dateFormatter = ISO8601DateFormatter()
-            dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-            
-            decoder.dateDecodingStrategy = .custom { decoder in
-                let container = try decoder.singleValueContainer()
-                let dateString = try container.decode(String.self)
-                
-                // Try with fractional seconds first
-                if let date = dateFormatter.date(from: dateString) {
-                    return date
-                }
-                
-                // Fallback to without fractional seconds
-                dateFormatter.formatOptions = [.withInternetDateTime]
-                if let date = dateFormatter.date(from: dateString) {
-                    return date
-                }
-                
-                throw DecodingError.dataCorruptedError(in: container, debugDescription: "Cannot decode date string: \(dateString)")
-            }
-            
-            do {
-                let decoded = try decoder.decode(T.self, from: data)
-                print("✅ Successfully decoded response")
-                return decoded
-            } catch {
-                print("❌ Decoding error: \(error)")
-                if let jsonString = String(data: data, encoding: .utf8) {
-                    print("📄 Response data: \(jsonString)")
-                }
-                throw NetworkError.decodingError
-            }
+            return try await executeRequest(endpoint: endpoint, method: method, bodyData: bodyData)
         } catch let error as NetworkError {
             throw error
         } catch {
-            print("❌ Network request failed: \(error.localizedDescription)")
             throw NetworkError.serverError(error.localizedDescription)
         }
     }
@@ -277,11 +318,14 @@ class NetworkManager: ObservableObject {
             let success: Bool
             let data: TokenResponse
         }
-        
-        let response: RefreshAPIResponse = try await fetch(
+
+        let bodyData = try JSONEncoder().encode(RefreshRequest(refreshToken: refreshToken))
+        let response: RefreshAPIResponse = try await executeRequest(
             endpoint: "/api/auth/refresh",
             method: "POST",
-            body: RefreshRequest(refreshToken: refreshToken)
+            bodyData: bodyData,
+            includeAuthorization: false,
+            retryOnUnauthorized: false
         )
         
         self.accessToken = response.data.accessToken
@@ -326,5 +370,115 @@ class NetworkManager: ObservableObject {
             kSecAttrAccount as String: key
         ]
         SecItemDelete(query as CFDictionary)
+    }
+}
+
+actor ImagePipeline {
+    static let shared = ImagePipeline()
+
+    private let memoryCache = NSCache<NSURL, UIImage>()
+    private let session: URLSession
+    private var inFlight: [URL: Task<UIImage, Error>] = [:]
+
+    init() {
+        let cache = URLCache(
+            memoryCapacity: 100 * 1024 * 1024,
+            diskCapacity: 500 * 1024 * 1024,
+            diskPath: "souqira-image-cache"
+        )
+
+        let configuration = URLSessionConfiguration.default
+        configuration.requestCachePolicy = .returnCacheDataElseLoad
+        configuration.urlCache = cache
+        configuration.timeoutIntervalForRequest = 30
+        configuration.httpMaximumConnectionsPerHost = 8
+
+        session = URLSession(configuration: configuration)
+        memoryCache.countLimit = 300
+    }
+
+    func image(for url: URL) async throws -> UIImage {
+        let key = url as NSURL
+
+        if let cached = memoryCache.object(forKey: key) {
+            return cached
+        }
+
+        if let task = inFlight[url] {
+            return try await task.value
+        }
+
+        let task = Task<UIImage, Error> {
+            let request = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 30)
+            let (data, response) = try await session.data(for: request)
+
+            guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+                throw URLError(.badServerResponse)
+            }
+
+            guard let image = UIImage(data: data) else {
+                throw URLError(.cannotDecodeRawData)
+            }
+
+            memoryCache.setObject(image, forKey: key)
+            return image
+        }
+
+        inFlight[url] = task
+
+        do {
+            let result = try await task.value
+            inFlight[url] = nil
+            return result
+        } catch {
+            inFlight[url] = nil
+            throw error
+        }
+    }
+
+    func prefetch(urls: [URL]) async {
+        for url in urls {
+            _ = try? await image(for: url)
+        }
+    }
+}
+
+struct CachedRemoteImage<Content: View, Placeholder: View>: View {
+    let url: URL?
+    let content: (Image) -> Content
+    let placeholder: () -> Placeholder
+
+    @State private var loadedImage: UIImage?
+
+    init(
+        url: URL?,
+        @ViewBuilder content: @escaping (Image) -> Content,
+        @ViewBuilder placeholder: @escaping () -> Placeholder
+    ) {
+        self.url = url
+        self.content = content
+        self.placeholder = placeholder
+    }
+
+    var body: some View {
+        Group {
+            if let loadedImage {
+                content(Image(uiImage: loadedImage))
+            } else {
+                placeholder()
+            }
+        }
+        .task(id: url) {
+            guard let url else {
+                loadedImage = nil
+                return
+            }
+
+            if loadedImage != nil {
+                return
+            }
+
+            loadedImage = try? await ImagePipeline.shared.image(for: url)
+        }
     }
 }
