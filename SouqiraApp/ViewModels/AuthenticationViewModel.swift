@@ -14,6 +14,7 @@ class AuthenticationViewModel: ObservableObject {
     @Published var currentUser: User?
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var successMessage: String?
     
     private let apiService = APIService()
     private let networkManager = NetworkManager.shared
@@ -24,6 +25,8 @@ class AuthenticationViewModel: ObservableObject {
     
     func checkAuthStatus() {
         if networkManager.accessToken != nil {
+            isAuthenticated = true
+
             Task {
                 await fetchCurrentUser()
             }
@@ -33,6 +36,7 @@ class AuthenticationViewModel: ObservableObject {
     func loginWithEmail(email: String, password: String) async {
         isLoading = true
         errorMessage = nil
+        successMessage = nil
         
         do {
             let response = try await apiService.login(email: email, password: password)
@@ -40,36 +44,146 @@ class AuthenticationViewModel: ObservableObject {
             // Tokens are already stored in NetworkManager by APIService
             currentUser = response.user
             isAuthenticated = true
+        } catch let networkError as NetworkError {
+            switch networkError {
+            case .serverError(let message):
+                errorMessage = message
+            case .unauthorized:
+                errorMessage = "Failed to login. Please check your credentials."
+            default:
+                errorMessage = "Failed to login. Please try again."
+            }
+            print("❌ Login error: \(networkError)")
         } catch {
-            errorMessage = "Failed to login. Please check your credentials."
+            errorMessage = "Failed to login. Please try again."
             print("❌ Login error: \(error)")
         }
         
         isLoading = false
     }
     
-    func registerWithEmail(name: String, email: String, password: String, phone: String, agreeToTerms: Bool) async {
+    func registerWithEmail(name: String, email: String, password: String) async {
         isLoading = true
         errorMessage = nil
+        successMessage = nil
         
         do {
-            let response = try await apiService.register(
-                name: name,
-                email: email,
-                password: password,
-                phone: phone,
-                agreeToTerms: agreeToTerms
-            )
-            
-            // Tokens are already stored in NetworkManager by APIService
-            currentUser = response.user
-            isAuthenticated = true
+            let message = try await apiService.register(name: name, email: email, password: password)
+            successMessage = message
+        } catch let networkError as NetworkError {
+            switch networkError {
+            case .serverError(let message):
+                errorMessage = message
+            default:
+                errorMessage = "Failed to register. Please try again."
+            }
+            print("❌ Registration error: \(networkError)")
         } catch {
             errorMessage = "Failed to register. Please try again."
             print("❌ Registration error: \(error)")
         }
         
         isLoading = false
+    }
+
+    func resendVerificationEmail(email: String) async {
+        isLoading = true
+        errorMessage = nil
+        successMessage = nil
+
+        do {
+            let message = try await apiService.resendVerificationEmail(email: email)
+            successMessage = message
+        } catch let networkError as NetworkError {
+            switch networkError {
+            case .serverError(let message):
+                if message.localizedCaseInsensitiveContains("/api/auth/resend-verification not found") {
+                    errorMessage = "Server update pending. Verification resend not available yet."
+                } else {
+                    errorMessage = message
+                }
+            default:
+                errorMessage = "Failed to resend verification email. Please try again."
+            }
+            print("❌ Resend verification error: \(networkError)")
+        } catch {
+            errorMessage = "Failed to resend verification email. Please try again."
+            print("❌ Resend verification error: \(error)")
+        }
+
+        isLoading = false
+    }
+
+    func sendForgotPasswordCode(email: String) async {
+        isLoading = true
+        errorMessage = nil
+        successMessage = nil
+
+        do {
+            let message = try await apiService.forgotPassword(email: email)
+            successMessage = message
+        } catch let networkError as NetworkError {
+            switch networkError {
+            case .serverError(let message):
+                errorMessage = message
+            default:
+                errorMessage = "Failed to send reset code. Please try again."
+            }
+        } catch {
+            errorMessage = "Failed to send reset code. Please try again."
+        }
+
+        isLoading = false
+    }
+
+    func confirmResetCode(email: String, code: String) async -> Bool {
+        isLoading = true
+        errorMessage = nil
+        successMessage = nil
+
+        defer { isLoading = false }
+
+        do {
+            let message = try await apiService.confirmResetCode(email: email, code: code)
+            successMessage = message
+            return true
+        } catch let networkError as NetworkError {
+            switch networkError {
+            case .serverError(let message):
+                errorMessage = message
+            default:
+                errorMessage = "Invalid or expired code."
+            }
+            return false
+        } catch {
+            errorMessage = "Invalid or expired code."
+            return false
+        }
+    }
+
+    func resetPassword(email: String, newPassword: String) async -> Bool {
+        isLoading = true
+        errorMessage = nil
+        successMessage = nil
+
+        defer { isLoading = false }
+
+        do {
+            let message = try await apiService.resetPassword(email: email, newPassword: newPassword)
+            successMessage = message
+            return true
+        } catch let networkError as NetworkError {
+            switch networkError {
+            case .serverError(let message):
+                errorMessage = message
+            default:
+                errorMessage = "Failed to reset password."
+            }
+            return false
+        } catch {
+            errorMessage = "Failed to reset password."
+            return false
+        }
     }
     
     func loginWithWhatsApp(phone: String) async {
@@ -135,6 +249,8 @@ class AuthenticationViewModel: ObservableObject {
                 errorMessage = "Failed to get authentication token from Google."
             case .notAvailable:
                 errorMessage = "Google Sign In is not available. Please check your configuration."
+            case .invalidClientID:
+                errorMessage = "Google Sign In is not configured correctly. Please check your configuration."
             }
             print("❌ [AuthViewModel] Google Sign In SDK error: \(error)")
         } catch let error as NetworkError {
@@ -149,7 +265,12 @@ class AuthenticationViewModel: ObservableObject {
                 errorMessage = networkErrorMessage(error)
             }
             #else
-            errorMessage = networkErrorMessage(error)
+            if case .serverError(let message) = error,
+               message.localizedCaseInsensitiveContains("invalid google token") {
+                errorMessage = "Google token blev afvist af backend. Vi sender nu iOS client-ID tokenformat, men backend skal matche samme Google client config. Prøv igen, og hvis fejlen fortsætter skal backend-teamet verificere Google audience/client ID."
+            } else {
+                errorMessage = networkErrorMessage(error)
+            }
             #endif
             
             print("❌ [AuthViewModel] Error message: \(errorMessage ?? "unknown")")
@@ -161,12 +282,51 @@ class AuthenticationViewModel: ObservableObject {
         
         isLoading = false
     }
+
+    func loginWithApple(idToken: String, userIdentifier: String, email: String?, fullName: PersonNameComponents?) async {
+        isLoading = true
+        errorMessage = nil
+
+        do {
+            let response = try await apiService.loginWithApple(
+                idToken: idToken,
+                userIdentifier: userIdentifier,
+                email: email,
+                fullName: fullName
+            )
+            currentUser = response.user
+            isAuthenticated = true
+        } catch let error as NetworkError {
+            errorMessage = networkErrorMessage(error)
+            print("❌ [AuthViewModel] Apple Sign In network error: \(error)")
+        } catch {
+            errorMessage = "Failed to sign in with Apple. Please try again."
+            print("❌ [AuthViewModel] Apple Sign In unexpected error: \(error)")
+        }
+
+        isLoading = false
+    }
     
     func fetchCurrentUser() async {
         do {
             currentUser = try await apiService.getCurrentUser()
             isAuthenticated = true
+        } catch let error as NetworkError {
+            if case .unauthorized = error {
+                logout()
+                return
+            }
+
+            errorMessage = networkErrorMessage(error)
         } catch {
+            errorMessage = "Failed to restore your session. Please try again."
+            print("❌ [AuthViewModel] Restore session failed: \(error)")
+            if networkManager.accessToken == nil {
+                logout()
+            }
+        }
+
+        if networkManager.accessToken == nil {
             logout()
         }
     }
@@ -179,6 +339,25 @@ class AuthenticationViewModel: ObservableObject {
         Task {
             try? await apiService.logout()
         }
+    }
+    
+    func deleteAccount() async {
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            try await apiService.deleteAccount()
+            // Clear local state
+            networkManager.clearAuthToken()
+            currentUser = nil
+            isAuthenticated = false
+            successMessage = "Account deleted successfully"
+        } catch {
+            errorMessage = "Failed to delete account. Please try again."
+            print("❌ [AuthViewModel] Delete account failed: \(error)")
+        }
+        
+        isLoading = false
     }
     
     private func networkErrorMessage(_ error: NetworkError) -> String {
