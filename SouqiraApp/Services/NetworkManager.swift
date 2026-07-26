@@ -270,7 +270,7 @@ class NetworkManager: ObservableObject {
         }
         
         // Add images
-        for (index, image) in images.enumerated() {
+        for image in images {
             body.append("--\(boundary)\r\n".data(using: .utf8)!)
             body.append("Content-Disposition: form-data; name=\"images\"; filename=\"\(image.filename)\"\r\n".data(using: .utf8)!)
             body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)

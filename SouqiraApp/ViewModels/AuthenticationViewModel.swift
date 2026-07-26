@@ -200,32 +200,15 @@ class AuthenticationViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         
-        // Check if running on simulator
-        #if targetEnvironment(simulator)
-        let isSimulator = true
-        #else
-        let isSimulator = false
-        #endif
-        
         do {
-            let idToken: String
-            
-            if isSimulator {
-                // In simulator, use a test token for development/debugging
-                print("⚠️ [AuthViewModel] Running on Simulator - using TEST mode")
-                print("📌 To test with real Google token, deploy to physical iPhone")
-                
-                // For actual testing, you would get real token from Google SDK
-                // But for now in simulator, we can't validate real tokens on backend
-                print("📱 [AuthViewModel] Calling GoogleSignInManager.signIn()...")
-                idToken = try await GoogleSignInManager.shared.signIn()
-                print("✅ [AuthViewModel] Got ID token from Google SDK: \(idToken.prefix(20))...")
-            } else {
-                // On real device
-                print("📱 [AuthViewModel] Calling GoogleSignInManager.signIn()...")
-                idToken = try await GoogleSignInManager.shared.signIn()
-                print("✅ [AuthViewModel] Got ID token from Google: \(idToken.prefix(20))...")
-            }
+            #if targetEnvironment(simulator)
+            print("⚠️ [AuthViewModel] Running on Simulator - using TEST mode")
+            print("📌 To test with real Google token, deploy to physical iPhone")
+            #endif
+
+            print("📱 [AuthViewModel] Calling GoogleSignInManager.signIn()...")
+            let idToken = try await GoogleSignInManager.shared.signIn()
+            print("✅ [AuthViewModel] Got ID token from Google: \(idToken.prefix(20))...")
             
             print("📡 [AuthViewModel] Sending ID token to backend: POST /api/auth/google/token")
             print("📡 [AuthViewModel] Token length: \(idToken.count) characters")
