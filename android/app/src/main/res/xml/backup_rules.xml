@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Disable all cloud backup paths by default for production safety. -->
+    <exclude domain="root" path="."/>
+</full-backup-content>

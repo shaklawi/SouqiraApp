@@ -1,0 +1,33 @@
+<svg width="1200" height="320" viewBox="0 0 1200 320" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Souqira logo">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1200" y2="320" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0A4F66"/>
+      <stop offset="1" stop-color="#1E7FA0"/>
+    </linearGradient>
+    <linearGradient id="markGrad" x1="80" y1="32" x2="260" y2="288" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8ED5E6"/>
+      <stop offset="0.5" stop-color="#1E8FB0"/>
+      <stop offset="1" stop-color="#0A5F7D"/>
+    </linearGradient>
+    <linearGradient id="wordGrad" x1="340" y1="72" x2="980" y2="260" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#D3F3FF"/>
+    </linearGradient>
+  </defs>
+  <g>
+    <circle cx="226" cy="58" r="18" fill="url(#markGrad)"/>
+    <path d="M210 34C161 34 121 67 121 107C121 152 156 170 194 187C223 200 254 211 254 237C254 258 231 274 203 274C166 274 132 251 119 222" stroke="url(#markGrad)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M258 50C241 35 217 26 189 26C140 26 100 58 100 99C100 143 135 161 173 178C202 191 233 202 233 229C233 249 211 266 183 266C147 266 115 245 102 217" stroke="#C5EEF7" stroke-opacity="0.42" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <g>
+    <text x="340" y="168" fill="url(#wordGrad)" font-family="Avenir Next, Montserrat, Poppins, Segoe UI, Arial, sans-serif" font-size="116" font-weight="800" letter-spacing="2">Souqira</text>
+    <text x="344" y="236" fill="#D7EFF8" font-family="Avenir Next, Montserrat, Poppins, Segoe UI, Arial, sans-serif" font-size="34" font-weight="500" letter-spacing="2">BUSINESS MARKETPLACE</text>
+  </g>
+
+  <g opacity="0.18">
+    <circle cx="1070" cy="74" r="56" stroke="#E6F8FF" stroke-width="2"/>
+    <circle cx="1116" cy="252" r="34" stroke="#E6F8FF" stroke-width="2"/>
+    <path d="M860 76H1148" stroke="#E6F8FF" stroke-width="2"/>
+  </g>
+</svg>

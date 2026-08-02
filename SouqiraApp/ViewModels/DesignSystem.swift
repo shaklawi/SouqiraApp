@@ -13,15 +13,16 @@ struct DesignSystem {
     
     // MARK: - Colors (like Tailwind)
     struct Colors {
-        // Primary colors
-        static let primary = Color(hex: "#3B82F6") // blue-500
-        static let primaryLight = Color(hex: "#60A5FA") // blue-400
-        static let primaryDark = Color(hex: "#2563EB") // blue-600
+        // Brand palette
+        static let primary = Color(hex: "#0A4F66")
+        static let primaryLight = Color(hex: "#0F6A86")
+        static let primaryDark = Color(hex: "#083A4D")
         
-        // Secondary colors
-        static let secondary = Color(hex: "#8B5CF6") // violet-500
-        static let secondaryLight = Color(hex: "#A78BFA") // violet-400
-        static let secondaryDark = Color(hex: "#7C3AED") // violet-600
+        static let secondary = Color(hex: "#2B7EA1")
+        static let secondaryLight = Color(hex: "#4F9DC0")
+        static let secondaryDark = Color(hex: "#1E5F7B")
+        
+        static let accent = Color(hex: "#0F6A86")
         
         // Success, Warning, Error
         static let success = Color(hex: "#10B981") // green-500
@@ -29,27 +30,36 @@ struct DesignSystem {
         static let error = Color(hex: "#EF4444") // red-500
         
         // Neutrals
-        static let gray50 = Color(hex: "#F9FAFB")
-        static let gray100 = Color(hex: "#F3F4F6")
-        static let gray200 = Color(hex: "#E5E7EB")
-        static let gray300 = Color(hex: "#D1D5DB")
-        static let gray400 = Color(hex: "#9CA3AF")
-        static let gray500 = Color(hex: "#6B7280")
-        static let gray600 = Color(hex: "#4B5563")
-        static let gray700 = Color(hex: "#374151")
-        static let gray800 = Color(hex: "#1F2937")
-        static let gray900 = Color(hex: "#111827")
+        static let gray50 = Color(hex: "#F7FAFC")
+        static let gray100 = Color(hex: "#EEF3F7")
+        static let gray200 = Color(hex: "#DCE6EE")
+        static let gray300 = Color(hex: "#C5D3DF")
+        static let gray400 = Color(hex: "#94A9BC")
+        static let gray500 = Color(hex: "#6B8399")
+        static let gray600 = Color(hex: "#4A647A")
+        static let gray700 = Color(hex: "#314A60")
+        static let gray800 = Color(hex: "#1C3347")
+        static let gray900 = Color(hex: "#0C2235")
+        
+        static let canvas = Color(hex: "#F2F6F9")
+        static let card = Color.white
         
         // Gradients
         static let primaryGradient = LinearGradient(
-            colors: [primary, secondary],
+            colors: [primary, primaryLight],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        
+        static let accentGradient = LinearGradient(
+            colors: [secondary, primaryLight],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
         
         static let softGradient = LinearGradient(
-            colors: [Color.blue.opacity(0.05), Color.purple.opacity(0.05), Color.white],
-            startPoint: .topLeading,
+            colors: [Color(hex: "#EEF4F8"), Color(hex: "#E3EDF4"), Color(hex: "#F8FBFD")],
+            startPoint: .top,
             endPoint: .bottomTrailing
         )
     }
@@ -78,24 +88,24 @@ struct DesignSystem {
     
     // MARK: - Shadows (like Tailwind)
     struct Shadows {
-        static let sm = Shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
-        static let md = Shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
-        static let lg = Shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 4)
-        static let xl = Shadow(color: .black.opacity(0.15), radius: 16, x: 0, y: 8)
-        static let xxl = Shadow(color: .black.opacity(0.2), radius: 24, x: 0, y: 12)
+        static let sm = Shadow(color: Color(hex: "#0F3D3E").opacity(0.06), radius: 4, x: 0, y: 2)
+        static let md = Shadow(color: Color(hex: "#0F3D3E").opacity(0.08), radius: 10, x: 0, y: 4)
+        static let lg = Shadow(color: Color(hex: "#0F3D3E").opacity(0.12), radius: 18, x: 0, y: 8)
+        static let xl = Shadow(color: Color(hex: "#0F3D3E").opacity(0.14), radius: 24, x: 0, y: 12)
+        static let xxl = Shadow(color: Color(hex: "#0F3D3E").opacity(0.18), radius: 30, x: 0, y: 16)
     }
     
     // MARK: - Typography (like Tailwind)
     struct Typography {
-        static let display = Font.system(size: 56, weight: .bold, design: .rounded)
-        static let h1 = Font.system(size: 40, weight: .bold, design: .rounded)
-        static let h2 = Font.system(size: 32, weight: .bold, design: .rounded)
-        static let h3 = Font.system(size: 24, weight: .semibold, design: .rounded)
+        static let display = Font.system(size: 56, weight: .bold, design: .serif)
+        static let h1 = Font.system(size: 40, weight: .bold, design: .serif)
+        static let h2 = Font.system(size: 32, weight: .bold, design: .serif)
+        static let h3 = Font.system(size: 24, weight: .semibold, design: .serif)
         static let h4 = Font.system(size: 20, weight: .semibold, design: .default)
-        static let body = Font.system(size: 16, weight: .regular)
+        static let body = Font.system(size: 16, weight: .regular, design: .rounded)
         static let bodyBold = Font.system(size: 16, weight: .semibold)
-        static let small = Font.system(size: 14, weight: .regular)
-        static let tiny = Font.system(size: 12, weight: .regular)
+        static let small = Font.system(size: 14, weight: .regular, design: .rounded)
+        static let tiny = Font.system(size: 12, weight: .regular, design: .rounded)
     }
 }
 
@@ -140,7 +150,7 @@ extension Color {
 // Card style (like Tailwind's card)
 struct CardModifier: ViewModifier {
     var padding: CGFloat = DesignSystem.Spacing.md
-    var backgroundColor: Color = .white
+    var backgroundColor: Color = DesignSystem.Colors.card
     var shadow: Shadow = DesignSystem.Shadows.md
     
     func body(content: Content) -> some View {
@@ -168,7 +178,7 @@ struct PrimaryButtonStyle: ButtonStyle {
                     : DesignSystem.Colors.primaryGradient
             )
             .cornerRadius(DesignSystem.Radius.xl)
-            .shadow(color: DesignSystem.Colors.primary.opacity(0.3), radius: 8, x: 0, y: 4)
+            .shadow(color: DesignSystem.Colors.primary.opacity(0.22), radius: 14, x: 0, y: 8)
             .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
             .animation(.spring(response: 0.3, dampingFraction: 0.6), value: configuration.isPressed)
             .opacity(isLoading ? 0.6 : 1.0)
@@ -180,11 +190,15 @@ struct SecondaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(DesignSystem.Typography.bodyBold)
-            .foregroundColor(DesignSystem.Colors.primary)
+            .foregroundColor(DesignSystem.Colors.primaryDark)
             .padding(.horizontal, DesignSystem.Spacing.lg)
             .padding(.vertical, DesignSystem.Spacing.md)
             .background(DesignSystem.Colors.gray100)
             .cornerRadius(DesignSystem.Radius.xl)
+            .overlay(
+                RoundedRectangle(cornerRadius: DesignSystem.Radius.xl)
+                    .stroke(DesignSystem.Colors.gray200, lineWidth: 1)
+            )
             .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
             .animation(.spring(response: 0.3, dampingFraction: 0.6), value: configuration.isPressed)
     }
@@ -195,7 +209,7 @@ struct GhostButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(DesignSystem.Typography.bodyBold)
-            .foregroundColor(DesignSystem.Colors.primary)
+            .foregroundColor(DesignSystem.Colors.primaryDark)
             .padding(.horizontal, DesignSystem.Spacing.lg)
             .padding(.vertical, DesignSystem.Spacing.md)
             .background(

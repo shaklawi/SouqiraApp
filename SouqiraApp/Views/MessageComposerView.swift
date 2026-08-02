@@ -13,7 +13,7 @@ struct MessageComposerView: View {
     let listing: BusinessListing
     
     @StateObject private var viewModel = MessagesViewModel()
-    @EnvironmentObject var localizationManager: LocalizationManager
+    @ObservedObject private var localizationManager = LocalizationManager.shared
     @Environment(\.dismiss) var dismiss
     
     @State private var messageText = ""
@@ -75,8 +75,10 @@ struct MessageComposerView: View {
     
     private var listingPreview: some View {
         HStack(spacing: 12) {
-            AsyncImage(url: URL(string: listing.images.first ?? "")) { image in
-                image.resizable().scaledToFill()
+            CachedRemoteImage(url: URL(string: listing.images.first ?? "")) { image in
+                image
+                    .resizable()
+                    .scaledToFill()
             } placeholder: {
                 Color.gray.opacity(0.2)
             }
@@ -107,7 +109,6 @@ struct MessageComposerView: View {
         Task {
             let success = await viewModel.sendMessage(
                 to: receiverId,
-                listingId: listingId,
                 message: messageText
             )
             

@@ -11,11 +11,22 @@ struct HomeView: View {
     @EnvironmentObject var appSettings: AppSettings
     @State private var showFilters = false
     @State private var showSettingsSheet = false
+    @State private var showCreateListingSheet = false
+    @State private var showAuthSheet = false
     
     var body: some View {
         NavigationStack {
             ZStack {
-                LinearGradient(colors: [Color.blue.opacity(0.05), Color.purple.opacity(0.05), Color.white], startPoint: .topLeading, endPoint: .bottomTrailing).ignoresSafeArea()
+                LinearGradient(
+                    colors: [
+                        DesignSystem.Colors.primaryDark.opacity(0.14),
+                        DesignSystem.Colors.primary.opacity(0.08),
+                        Color.white
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
                 
                 ScrollView {
                     VStack(spacing: 0) {
@@ -30,23 +41,47 @@ struct HomeView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { showSettingsSheet = true }) {
-                        Image(systemName: "gearshape.fill").font(.title3).foregroundStyle(LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
+                        Image(systemName: "gearshape.fill")
+                            .font(.title3)
+                            .foregroundStyle(DesignSystem.Colors.accentGradient)
                     }
                 }
             }
             .sheet(isPresented: $showFilters) { FilterView(viewModel: viewModel) }
             .sheet(isPresented: $showSettingsSheet) { SettingsSheet() }
+            .sheet(isPresented: $showCreateListingSheet) { CreateListingView() }
+            .sheet(isPresented: $showAuthSheet) { AuthenticationView() }
             .task {
                 if viewModel.listings.isEmpty {
                     await viewModel.fetchListings(refresh: true)
                 }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .listingCreated)) { _ in
+                Task {
+                    await viewModel.fetchListings(refresh: true)
+                }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .listingDeleted)) { notification in
+                guard let listingId = notification.object as? String else { return }
+                viewModel.listings.removeAll { $0.id == listingId }
             }
         }
     }
     
     private var heroSection: some View {
         ZStack(alignment: .center) {
-            LinearGradient(gradient: Gradient(stops: [.init(color: Color(red: 0.2, green: 0.4, blue: 0.95), location: 0), .init(color: Color(red: 0.6, green: 0.2, blue: 0.8), location: 0.6), .init(color: Color(red: 0.95, green: 0.3, blue: 0.5), location: 1)]), startPoint: .topLeading, endPoint: .bottomTrailing).ignoresSafeArea()
+            LinearGradient(
+                gradient: Gradient(
+                    stops: [
+                        .init(color: DesignSystem.Colors.primaryDark, location: 0),
+                        .init(color: DesignSystem.Colors.primary, location: 0.58),
+                        .init(color: DesignSystem.Colors.secondaryDark, location: 1)
+                    ]
+                ),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
             
             VStack(spacing: 0) {
                 Circle().fill(Color.white.opacity(0.15)).frame(width: 300, height: 300).offset(x: -100, y: -150)
@@ -68,7 +103,13 @@ struct HomeView: View {
                 }
                 .padding(.horizontal, 24)
                 
-                Button(action: { showSettingsSheet = true }) {
+                Button(action: {
+                    if authViewModel.isAuthenticated {
+                        showCreateListingSheet = true
+                    } else {
+                        showAuthSheet = true
+                    }
+                }) {
                     HStack(spacing: 14) {
                         Image(systemName: "plus.circle.fill").font(.system(size: 20, weight: .bold))
                         VStack(alignment: .leading, spacing: 2) {
@@ -94,8 +135,17 @@ struct HomeView: View {
     private var searchAndFilterSection: some View {
         VStack(spacing: 16) {
             HStack(spacing: 12) {
-                Image(systemName: "magnifyingglass").font(.system(size: 18, weight: .semibold)).foregroundStyle(LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
-                TextField(LocalizationManager.searchBusinesses.get(language: appSettings.language), text: $viewModel.searchQuery).textFieldStyle(.plain).font(.system(size: 16))
+                Image(systemName: "magnifyingglass")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(DesignSystem.Colors.accentGradient)
+                TextField(
+                    "",
+                    text: $viewModel.searchQuery,
+                    prompt: Text(LocalizationManager.searchBusinesses.get(language: appSettings.language))
+                        .foregroundColor(Color(hex: "#7B8798"))
+                )
+                .textFieldStyle(.plain)
+                .font(.system(size: 16))
                 if !viewModel.searchQuery.isEmpty {
                     Button(action: { viewModel.searchQuery = ""; Task { await viewModel.fetchListings(refresh: true) } }) {
                         Image(systemName: "xmark.circle.fill").font(.system(size: 16)).foregroundColor(.gray)
@@ -115,7 +165,7 @@ struct HomeView: View {
                 .foregroundColor(.white)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 10)
-                .background(Color.blue)
+                .background(DesignSystem.Colors.primary)
                 .cornerRadius(10)
             }
         }
@@ -127,7 +177,9 @@ struct HomeView: View {
                 ProgressView().frame(maxWidth: .infinity).padding(.vertical, 40)
             } else if viewModel.listings.isEmpty {
                 VStack(spacing: 16) {
-                    Image(systemName: "building.2.fill").font(.system(size: 60)).foregroundStyle(LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
+                    Image(systemName: "building.2.fill")
+                        .font(.system(size: 60))
+                        .foregroundStyle(DesignSystem.Colors.accentGradient)
                     Text("No listings").font(.system(size: 18, weight: .semibold))
                     Text("Check back later").font(.system(size: 14)).foregroundColor(.secondary)
                 }

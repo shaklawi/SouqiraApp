@@ -148,9 +148,15 @@ class LocalizationManager: ObservableObject {
     )
     
     static let contactSeller = LocalizedString(
-        en: "Contact Seller",
-        ar: "اتصل بالبائع",
-        ku: "پەیوەندی بە فرۆشیار"
+        en: "Contact Information",
+        ar: "معلومات التواصل",
+        ku: "زانیاری پەیوەندی"
+    )
+
+    static let noContactInformation = LocalizedString(
+        en: "No contact information available",
+        ar: "لا توجد معلومات تواصل متاحة",
+        ku: "هیچ زانیارییەکی پەیوەندی بەردەست نییە"
     )
     
     // Contact Options
@@ -215,6 +221,24 @@ class LocalizationManager: ObservableObject {
         ku: "چوونەدەرەوە"
     )
     
+    static let deleteAccount = LocalizedString(
+        en: "Delete Account",
+        ar: "حذف الحساب",
+        ku: "حسابی بسڕینەوە"
+    )
+    
+    static let deleteConfirmationTitle = LocalizedString(
+        en: "Delete Account",
+        ar: "حذف الحساب",
+        ku: "حسابی بسڕینەوە"
+    )
+    
+    static let deleteConfirmationMessage = LocalizedString(
+        en: "Are you sure you want to permanently delete your account? This action cannot be undone and all your listings and data will be removed.",
+        ar: "هل أنت متأكد أنك تريد حذف حسابك بشكل دائم؟ تُرجا ملاحظة أن هذا الإجراء لا يمكن التراجع عنه وسيتم محو جميع إعلاناتك وبيانات حسابك.",
+        ku: "دڵنیایت دەتەوێت حسابی خۆت بە شێوەیەکی هێڵکاری بسڕیتەوە؟ ئەم کردار نابتوانرێت واپەڕگێنرێت و هەموو ڕیکلامەکان و زانیاریەکانی حسابت سڕاودەدرێت."
+    )
+    
     // Empty States
     static let noListingsFound = LocalizedString(
         en: "No listings found",
@@ -263,6 +287,12 @@ class LocalizationManager: ObservableObject {
         en: "Cancel",
         ar: "إلغاء",
         ku: "هەڵوەشاندنەوە"
+    )
+    
+    static let delete = LocalizedString(
+        en: "Delete",
+        ar: "حذف",
+        ku: "بسڕینەوە"
     )
     
     static let done = LocalizedString(

@@ -75,7 +75,12 @@ struct DesignSystemDemoView: View {
                     Text("Input Fields")
                         .font(DesignSystem.Typography.h3)
                     
-                    TextField("Search businesses...", text: $textInput)
+                    TextField(
+                        "",
+                        text: $textInput,
+                        prompt: Text("Search businesses...")
+                            .foregroundColor(.secondary)
+                    )
                         .inputField(isFocused: isInputFocused)
                         .onTapGesture {
                             isInputFocused = true

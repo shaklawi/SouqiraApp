@@ -12,107 +12,114 @@ struct ChatView: View {
     
     @StateObject private var viewModel = MessagesViewModel()
     @EnvironmentObject var authViewModel: AuthenticationViewModel
-    @EnvironmentObject var localizationManager: LocalizationManager
+    @ObservedObject private var localizationManager = LocalizationManager.shared
     
     @State private var messageText = ""
     @State private var scrollProxy: ScrollViewProxy?
+    private let tabBarReservedSpace: CGFloat = 96
     
     private var otherUser: MessageUser? {
-        conversation.participants.first { $0.id != authViewModel.currentUser?.id }
+        conversation.partner
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Listing header (if exists)
-            if let listing = conversation.listing {
-                listingHeader(listing)
-            }
-            
-            // Messages
-            ScrollViewReader { proxy in
-                ScrollView {
-                    LazyVStack(spacing: 12) {
-                        ForEach(viewModel.currentMessages) { message in
-                            MessageBubble(
-                                message: message,
-                                isFromCurrentUser: message.senderId == authViewModel.currentUser?.id
-                            )
-                            .id(message.id)
+        ZStack {
+            SouqiraPatternBackground()
+
+            VStack(spacing: 0) {
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        LazyVStack(spacing: 10) {
+                            ForEach(viewModel.currentMessages) { message in
+                                MessageBubble(
+                                    message: message,
+                                    isFromCurrentUser: message.senderId == authViewModel.currentUser?.id
+                                )
+                                .id(message.id)
+                            }
                         }
+                        .padding(.horizontal, 12)
+                        .padding(.top, 12)
+                        .padding(.bottom, 8)
                     }
-                    .padding()
+                    .scrollIndicators(.hidden)
+                    .scrollDismissesKeyboard(.interactively)
+                    .onAppear {
+                        scrollProxy = proxy
+                        scrollToBottom()
+                    }
+                    .onChange(of: viewModel.currentMessages.count) { _ in
+                        scrollToBottom()
+                    }
                 }
-                .onAppear {
-                    scrollProxy = proxy
-                    scrollToBottom()
-                }
-                .onChange(of: viewModel.currentMessages.count) { _ in
-                    scrollToBottom()
-                }
+
+                messageInputBar
+                    .padding(.horizontal, 12)
+                    .padding(.top, 6)
+                    .padding(.bottom, 8)
             }
-            
-            // Message input
-            messageInputBar
         }
         .navigationTitle(otherUser?.name ?? "Chat")
         .navigationBarTitleDisplayMode(.inline)
+        .safeAreaInset(edge: .bottom) {
+            Color.clear
+                .frame(height: tabBarReservedSpace)
+        }
         .task {
-            await viewModel.loadMessages(for: conversation.id)
+            await viewModel.loadMessages(for: conversation.partner.id)
         }
-    }
-    
-    private func listingHeader(_ listing: MessageListing) -> some View {
-        HStack(spacing: 12) {
-            AsyncImage(url: URL(string: listing.primaryImage)) { image in
-                image.resizable().scaledToFill()
-            } placeholder: {
-                Color.gray.opacity(0.2)
-            }
-            .frame(width: 60, height: 60)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(listing.title)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .lineLimit(2)
-                
-                Text("\(listing.currency.uppercased()) \(Int(listing.price))")
-                    .font(.caption)
-                    .fontWeight(.bold)
-                    .foregroundColor(.blue)
-            }
-            
-            Spacer()
-        }
-        .padding()
-        .background(Color(.systemGray6))
     }
     
     private var messageInputBar: some View {
-        HStack(spacing: 12) {
-            TextField(localizationManager.localize(key: "type_message"), text: $messageText)
-                .textFieldStyle(.roundedBorder)
-                .frame(minHeight: 36)
-            
-            Button(action: sendMessage) {
-                Image(systemName: "paperplane.fill")
-                    .font(.title3)
-                    .foregroundColor(.white)
-                    .frame(width: 40, height: 40)
-                    .background(messageText.isEmpty ? Color.gray : Color.blue)
-                    .clipShape(Circle())
+        HStack(spacing: 10) {
+            HStack(spacing: 8) {
+                Image(systemName: "chevron.left.slash.chevron.right")
+                    .font(.subheadline)
+                    .foregroundColor(DesignSystem.Colors.gray500)
+
+                TextField(localizationManager.localize(key: "type_message"), text: $messageText)
+                    .font(.body)
+                    .submitLabel(.send)
+                    .onSubmit(sendMessage)
             }
-            .disabled(messageText.isEmpty)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color.white.opacity(0.92))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(DesignSystem.Colors.gray200, lineWidth: 1)
+                    )
+            )
+
+            Button(action: sendMessage) {
+                Image(systemName: "arrow.up")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(width: 42, height: 42)
+                    .background(
+                        Circle()
+                            .fill(messageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? LinearGradient(colors: [DesignSystem.Colors.gray400, DesignSystem.Colors.gray500], startPoint: .topLeading, endPoint: .bottomTrailing) : DesignSystem.Colors.primaryGradient)
+                    )
+                    .shadow(color: DesignSystem.Colors.primary.opacity(0.25), radius: 8, x: 0, y: 4)
+            }
+            .disabled(messageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
-        .padding()
-        .background(Color(.systemBackground))
-        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: -2)
+        .padding(10)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(.ultraThinMaterial)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(DesignSystem.Colors.gray200.opacity(0.9), lineWidth: 1)
+                )
+        )
+        .shadow(color: DesignSystem.Colors.gray900.opacity(0.08), radius: 14, x: 0, y: 6)
     }
     
     private func sendMessage() {
-        guard let receiverId = otherUser?.id,
-              let listingId = conversation.listing?.id else {
+        guard let receiverId = otherUser?.id else {
             return
         }
         
@@ -122,7 +129,6 @@ struct ChatView: View {
         Task {
             let success = await viewModel.sendMessage(
                 to: receiverId,
-                listingId: listingId,
                 message: text
             )
             
@@ -157,23 +163,29 @@ struct MessageBubble: View {
             }
             
             VStack(alignment: isFromCurrentUser ? .trailing : .leading, spacing: 4) {
-                Text(message.message)
+                Text(message.content)
                     .font(.body)
                     .foregroundColor(isFromCurrentUser ? .white : .primary)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 10)
                     .background(
                         isFromCurrentUser
-                        ? Color.blue
-                        : Color(.systemGray5)
+                        ? DesignSystem.Colors.primaryGradient
+                        : LinearGradient(colors: [Color.white.opacity(0.95), DesignSystem.Colors.gray100], startPoint: .topLeading, endPoint: .bottomTrailing)
                     )
-                    .clipShape(RoundedRectangle(cornerRadius: 18))
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(isFromCurrentUser ? Color.clear : DesignSystem.Colors.gray200, lineWidth: 1)
+                    )
+                    .shadow(color: DesignSystem.Colors.gray900.opacity(isFromCurrentUser ? 0.14 : 0.08), radius: 8, x: 0, y: 4)
                 
                 Text(timeString)
                     .font(.caption2)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(DesignSystem.Colors.gray500)
                     .padding(.horizontal, 4)
             }
+            .frame(maxWidth: 280, alignment: isFromCurrentUser ? .trailing : .leading)
             
             if !isFromCurrentUser {
                 Spacer(minLength: 60)
@@ -186,29 +198,15 @@ struct MessageBubble: View {
     NavigationStack {
         ChatView(conversation: Conversation(
             id: "1",
-            participants: [
-                MessageUser(id: "user1", name: "Ahmed", email: "ahmed@example.com", phone: nil),
-                MessageUser(id: "user2", name: "Sara", email: "sara@example.com", phone: nil)
-            ],
-            listing: MessageListing(
-                id: "listing1",
-                title: "محل مواد منزلية للبيع",
-                price: 5500,
-                currency: "usd",
-                images: []
-            ),
-            lastMessage: Message(
+            partner: MessageUser(id: "user2", email: "sara@example.com", firstname: "Sara", lastname: nil, username: nil),
+            latestMessage: Message(
                 id: "msg1",
-                conversationId: "1",
                 senderId: "user2",
                 receiverId: "user1",
-                message: "Hello, is this still available?",
+                content: "Hello, is this still available?",
                 isRead: false,
                 createdAt: Date()
-            ),
-            unreadCount: 1,
-            createdAt: Date(),
-            updatedAt: Date()
+            )
         ))
     }
     .environmentObject(AuthenticationViewModel())

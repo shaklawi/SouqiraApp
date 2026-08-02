@@ -4,7 +4,7 @@
 //
 //  Created on 17/02/2026
 //
-
+ 
 import Foundation
 
 struct MockDataService {
@@ -75,7 +75,7 @@ struct MockDataService {
             price: 28000,
             currency: .usd,
             location: "sulaymaniyah",
-            category: "retail_stores",
+            category: "auto_services",
             images: [],
             vrMedia: nil,
             address: "Industrial Area, Sulaymaniyah",

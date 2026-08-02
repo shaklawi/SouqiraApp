@@ -7,11 +7,16 @@
 
 import SwiftUI
 import UserNotifications
+#if canImport(GoogleSignIn)
+import GoogleSignIn
+#endif
 
 @main
 struct SouqiraApp: App {
     @StateObject private var authViewModel = AuthenticationViewModel()
     @StateObject private var appSettings = AppSettings()
+    @StateObject private var localizationManager = LocalizationManager.shared
+    @StateObject private var appNotificationManager = AppNotificationManager()
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     init() {
@@ -19,8 +24,7 @@ struct SouqiraApp: App {
         GoogleSignInManager.shared.configure()
         
         // Setup push notification delegate
-        // TODO: Uncomment when PushNotificationManager is added to build
-        // UNUserNotificationCenter.current().delegate = PushNotificationManager.shared
+        UNUserNotificationCenter.current().delegate = PushNotificationManager.shared
     }
     
     var body: some Scene {
@@ -28,15 +32,31 @@ struct SouqiraApp: App {
             ContentView()
                 .environmentObject(authViewModel)
                 .environmentObject(appSettings)
+                .environmentObject(localizationManager)
+                .environmentObject(appNotificationManager)
                 .preferredColorScheme(appSettings.isDarkMode ? .dark : .light)
                 .onOpenURL { url in
                     // Handle Google Sign In callback
                     _ = GoogleSignInManager.shared.handleURL(url)
                 }
                 .onAppear {
-                    // Register for push notifications when app appears
-                    // TODO: Uncomment when PushNotificationManager is added to build
-                    // PushNotificationManager.shared.registerForPushNotifications()
+                    localizationManager.language = appSettings.language
+                    PushNotificationManager.shared.registerForPushNotifications()
+                    Task {
+                        await PushNotificationManager.shared.syncStoredDeviceToken()
+                    }
+                }
+                .onChange(of: appSettings.language) { newLanguage in
+                    localizationManager.language = newLanguage
+                }
+                .task(id: authViewModel.isAuthenticated) {
+                    await PushNotificationManager.shared.syncStoredDeviceToken()
+
+                    if authViewModel.isAuthenticated {
+                        await appNotificationManager.pollingLoop()
+                    } else {
+                        appNotificationManager.reset()
+                    }
                 }
         }
     }
@@ -48,18 +68,25 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
-        // TODO: Uncomment when PushNotificationManager is added to build
-        // PushNotificationManager.shared.handleDeviceToken(deviceToken)
-        let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
-        print("📱 Device Token: \(token)")
+        PushNotificationManager.shared.handleDeviceToken(deviceToken)
     }
     
     func application(
         _ application: UIApplication,
         didFailToRegisterForRemoteNotificationsWithError error: Error
     ) {
-        // TODO: Uncomment when PushNotificationManager is added to build
-        // PushNotificationManager.shared.handleRegistrationError(error)
-        print("❌ Failed to register for remote notifications: \(error)")
+        PushNotificationManager.shared.handleRegistrationError(error)
+    }
+    
+    func application(
+        _ app: UIApplication,
+        open url: URL,
+        options: [UIApplication.OpenURLOptionsKey: Any] = [:]
+    ) -> Bool {
+        #if canImport(GoogleSignIn)
+        return GIDSignIn.sharedInstance.handle(url)
+        #else
+        return false
+        #endif
     }
 }

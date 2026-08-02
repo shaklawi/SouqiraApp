@@ -22,6 +22,10 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import androidx.compose.foundation.shape.CircleShape
@@ -74,11 +78,13 @@ enum class ListingsFilterMode {
 }
 
 @Composable
+@OptIn(ExperimentalMaterialApi::class)
 @Suppress("UNUSED_PARAMETER")
 fun ListingsScreen(
     title: String,
     viewModel: ListingsViewModel,
     isAuthenticated: Boolean,
+    userDisplayName: String? = null,
     filterMode: ListingsFilterMode = ListingsFilterMode.CATEGORY,
     onOpenListing: (String) -> Unit,
     onCreateAd: () -> Unit = {},
@@ -112,6 +118,13 @@ fun ListingsScreen(
             .fillMaxSize()
             .background(brush = backgroundGradient)
     ) {
+        val refreshEnabled = !isRegionMode || !selectedRegion.isNullOrBlank()
+        val isRefreshing = uiState.isLoading && uiState.listings.isNotEmpty()
+        val pullRefreshState = rememberPullRefreshState(
+            refreshing = isRefreshing,
+            onRefresh = { if (refreshEnabled) viewModel.refresh() }
+        )
+
         val filteredRegions = remember(search, uiState.regions) {
             val q = search.trim().lowercase()
             if (q.isBlank()) {
@@ -152,14 +165,21 @@ fun ListingsScreen(
                 }
         }
 
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .pullRefresh(pullRefreshState, enabled = refreshEnabled)
         ) {
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
             if (filterMode == ListingsFilterMode.CATEGORY) {
                 item {
                     HeroHeader(
+                        isAuthenticated = isAuthenticated,
+                        userDisplayName = userDisplayName,
                         onSettingsClick = onSettingsClick
                     )
                 }
@@ -177,6 +197,19 @@ fun ListingsScreen(
                             color = Color(0xFF6D8190),
                             modifier = Modifier.padding(top = 2.dp)
                         )
+                        if (isAuthenticated) {
+                            Text(
+                                text = stringResource(
+                                    R.string.home_greeting_hi_user,
+                                    userDisplayName?.takeIf { it.isNotBlank() }
+                                        ?: stringResource(R.string.profile_default_user)
+                                ),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color(0xFF0A4F66),
+                                fontWeight = FontWeight.SemiBold,
+                                modifier = Modifier.padding(top = 6.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -459,15 +492,24 @@ fun ListingsScreen(
                 }
             }
 
-            item {
-                if ((!isRegionMode || !selectedRegion.isNullOrBlank()) && uiState.isLoading && uiState.listings.isNotEmpty()) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.padding(vertical = 16.dp),
-                        color = Color(0xFF0A4F66)
-                    )
+                item {
+                    if ((!isRegionMode || !selectedRegion.isNullOrBlank()) && uiState.isLoading && uiState.listings.isNotEmpty()) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.padding(vertical = 16.dp),
+                            color = Color(0xFF0A4F66)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(98.dp))
                 }
-                Spacer(modifier = Modifier.height(98.dp))
             }
+
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter),
+                backgroundColor = Color.White,
+                contentColor = Color(0xFF0A4F66)
+            )
         }
     }
 }
@@ -708,6 +750,8 @@ private fun SoldWatermark(modifier: Modifier = Modifier) {
 
 @Composable
 private fun HeroHeader(
+    isAuthenticated: Boolean,
+    userDisplayName: String?,
     onSettingsClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -774,9 +818,31 @@ private fun HeroHeader(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.End,
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top
         ) {
+            if (isAuthenticated) {
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(Color.White.copy(alpha = 0.18f))
+                        .border(1.dp, Color.White.copy(alpha = 0.22f), RoundedCornerShape(16.dp))
+                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                ) {
+                    Text(
+                        text = stringResource(
+                            R.string.home_greeting_hi_user,
+                            userDisplayName?.takeIf { it.isNotBlank() }
+                                ?: stringResource(R.string.profile_default_user)
+                        ),
+                        color = Color.White,
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
+            } else {
+                Spacer(modifier = Modifier.width(1.dp))
+            }
+
             Box(
                 modifier = Modifier
                     .size(44.dp)

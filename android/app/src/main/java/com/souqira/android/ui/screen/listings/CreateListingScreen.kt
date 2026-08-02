@@ -105,6 +105,8 @@ fun CreateListingScreen(
             value = title,
             onValueChange = { title = it },
             label = { Text(stringResource(R.string.create_listing_field_title)) },
+            placeholder = { Text(stringResource(R.string.create_listing_hint_title)) },
+            supportingText = { Text(stringResource(R.string.create_listing_help_title)) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(14.dp),
             singleLine = true
@@ -113,6 +115,8 @@ fun CreateListingScreen(
             value = description,
             onValueChange = { description = it },
             label = { Text(stringResource(R.string.create_listing_field_description)) },
+            placeholder = { Text(stringResource(R.string.create_listing_hint_description)) },
+            supportingText = { Text(stringResource(R.string.create_listing_help_description)) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(14.dp),
             minLines = 3
@@ -121,6 +125,8 @@ fun CreateListingScreen(
             value = price,
             onValueChange = { price = it },
             label = { Text(stringResource(R.string.create_listing_field_price)) },
+            placeholder = { Text(stringResource(R.string.create_listing_hint_price)) },
+            supportingText = { Text(stringResource(R.string.create_listing_help_price)) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(14.dp),
             singleLine = true
@@ -159,6 +165,7 @@ fun CreateListingScreen(
                 onValueChange = {},
                 readOnly = true,
                 label = { Text(stringResource(R.string.create_listing_category)) },
+                supportingText = { Text(stringResource(R.string.create_listing_help_category)) },
                 trailingIcon = { Text("▾", color = Color(0xFF0A4F66)) },
                 shape = RoundedCornerShape(14.dp),
                 singleLine = true
@@ -187,6 +194,7 @@ fun CreateListingScreen(
                 onValueChange = {},
                 readOnly = true,
                 label = { Text(stringResource(R.string.create_listing_region)) },
+                supportingText = { Text(stringResource(R.string.create_listing_help_region)) },
                 trailingIcon = { Text("▾", color = Color(0xFF0A4F66)) },
                 shape = RoundedCornerShape(14.dp),
                 singleLine = true
@@ -209,6 +217,8 @@ fun CreateListingScreen(
             value = phone,
             onValueChange = { phone = it },
             label = { Text(stringResource(R.string.create_listing_phone)) },
+            placeholder = { Text(stringResource(R.string.create_listing_hint_phone)) },
+            supportingText = { Text(stringResource(R.string.create_listing_help_phone)) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(14.dp),
             singleLine = true
@@ -217,6 +227,8 @@ fun CreateListingScreen(
             value = whatsapp,
             onValueChange = { whatsapp = it },
             label = { Text(stringResource(R.string.create_listing_whatsapp_optional)) },
+            placeholder = { Text(stringResource(R.string.create_listing_hint_whatsapp)) },
+            supportingText = { Text(stringResource(R.string.create_listing_help_whatsapp)) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(14.dp),
             singleLine = true
@@ -225,6 +237,8 @@ fun CreateListingScreen(
             value = address,
             onValueChange = { address = it },
             label = { Text(stringResource(R.string.create_listing_address_optional)) },
+            placeholder = { Text(stringResource(R.string.create_listing_hint_address)) },
+            supportingText = { Text(stringResource(R.string.create_listing_help_address)) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(14.dp),
             singleLine = true
@@ -242,6 +256,12 @@ fun CreateListingScreen(
             Text(stringResource(R.string.create_listing_add_photos))
         }
 
+        Text(
+            text = stringResource(R.string.create_listing_help_photos),
+            style = MaterialTheme.typography.bodySmall,
+            color = Color(0xFF6B7FA3)
+        )
+
         if (selectedImages.isNotEmpty()) {
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(selectedImages) { uri ->
@@ -257,7 +277,10 @@ fun CreateListingScreen(
         }
 
         if (!uiState.errorMessage.isNullOrBlank()) {
-            Text(uiState.errorMessage ?: "", color = MaterialTheme.colorScheme.error)
+            Text(
+                text = localizeCreateListingMessage(uiState.errorMessage),
+                color = MaterialTheme.colorScheme.error
+            )
         }
 
         Button(
@@ -298,6 +321,20 @@ fun CreateListingScreen(
         }
 
         Spacer(modifier = Modifier.height(90.dp))
+    }
+}
+
+@Composable
+private fun localizeCreateListingMessage(message: String?): String {
+    val raw = message ?: return ""
+    return when (raw) {
+        "Title must be at least 5 characters" -> stringResource(R.string.msg_title_min_5)
+        "Description must be at least 20 characters" -> stringResource(R.string.msg_description_min_20)
+        "Phone number looks too short" -> stringResource(R.string.msg_phone_too_short)
+        "Please select a category" -> stringResource(R.string.msg_select_category)
+        "Please select a region" -> stringResource(R.string.msg_select_region)
+        "Failed to create listing" -> stringResource(R.string.msg_failed_create_listing)
+        else -> raw
     }
 }
 

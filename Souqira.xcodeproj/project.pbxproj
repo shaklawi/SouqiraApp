@@ -3,12 +3,14 @@
     archiveVersion = 1;
     classes = {
     };
-    objectVersion = 77;
+    objectVersion = 63;
     objects = {
 
 /* Begin PBXBuildFile section */
+    05A1F6E31B8C4D67902F11A1 /* AppNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A1F6E21B8C4D67902F11A1 /* AppNotificationManager.swift */; };
+    05A1F6E51B8C4D67902F11A1 /* PushNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A1F6E41B8C4D67902F11A1 /* PushNotificationManager.swift */; };
         0715302CEC6F7C0827ED3ECF /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D28C5C3BB25D05B490CAF23 /* AppSettings.swift */; };
-        19CFEA7A18AE56902329BDAF /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 969A44847E231446227EF0CE /* GoogleSignIn */; };
+        0B8316DBBFA86122CA13FB15 /* Pods_Souqira.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D017FC80485B40D2DF365614 /* Pods_Souqira.framework */; };
         1B405472118A319B396B07F5 /* MockDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F67AD1C53558B1EA4B645D /* MockDataService.swift */; };
         21342BB275A558F1FB342061 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9889476040294F74D38C01 /* APIService.swift */; };
         24E3E2F0D0A6F833F0C7FF98 /* CitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2B571E7FDA9CEF31780ADD /* CitiesView.swift */; };
@@ -27,6 +29,7 @@
         7E9D32A03FC21D68C59A9183 /* SettingsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A27A3695A35228FF24E8CE /* SettingsSheet.swift */; };
         813F757B54A2E1DD52D49CFD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866913F181357A61148CBE69 /* ContentView.swift */; };
         82AAEED6FCB43C0919EBA6B4 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D631E56FA6A66A366C10E74 /* Message.swift */; };
+        8C5AF0D11B8C4D67902F11A1 /* AppNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C5AF0D01B8C4D67902F11A1 /* AppNotification.swift */; };
         98F4B52414B57C9F4819FBD8 /* ConversationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0BCDC23FD171338EDF07FA /* ConversationsView.swift */; };
         9A2B8435D2BBCE4BEA8A7159 /* BusinessListing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6529E535A53531698E4C0D /* BusinessListing.swift */; };
         9F0FA74FE6459A413EEF6A2F /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F9834630B21F618C34055C /* LocalizationManager.swift */; };
@@ -45,8 +48,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-        07A31D65E851F7E49319DB87 /* Souqira.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Souqira.app; sourceTree = BUILT_PRODUCTS_DIR; };
+    05A1F6E21B8C4D67902F11A1 /* AppNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNotificationManager.swift; sourceTree = "<group>"; };
+    05A1F6E41B8C4D67902F11A1 /* PushNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationManager.swift; sourceTree = "<group>"; };
+        07A31D65E851F7E49319DB87 /* Souqira.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Souqira.app; sourceTree = BUILT_PRODUCTS_DIR; };
+        09BDE1CA4D714291136A469A /* Pods-Souqira.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Souqira.release.xcconfig"; path = "Target Support Files/Pods-Souqira/Pods-Souqira.release.xcconfig"; sourceTree = "<group>"; };
         0F0853B91B3C628634CEE3D2 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+        14F3C147C42E200E8638DBF4 /* Pods-Souqira.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Souqira.debug.xcconfig"; path = "Target Support Files/Pods-Souqira/Pods-Souqira.debug.xcconfig"; sourceTree = "<group>"; };
         16C0D03B2435A0B77D6096A9 /* ListingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingDetailView.swift; sourceTree = "<group>"; };
         283358790C4D49D8167C460B /* CleanHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanHomeView.swift; sourceTree = "<group>"; };
         29E5DFAD228FF9296AEA9159 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -68,6 +75,7 @@
         7F2B571E7FDA9CEF31780ADD /* CitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitiesView.swift; sourceTree = "<group>"; };
         82902FF000955D89C8F49D0E /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
         866913F181357A61148CBE69 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+        8C5AF0D01B8C4D67902F11A1 /* AppNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNotification.swift; sourceTree = "<group>"; };
         8BB9B97B5B06509755FF7E94 /* CreateListingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateListingView.swift; sourceTree = "<group>"; };
         8D260B991AA40ADBAA8EFFCF /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
         93F9834630B21F618C34055C /* LocalizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
@@ -77,10 +85,10 @@
         B552C6800F7EA44CA4E5BEFD /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
         C9520192AF4C301D15758FAA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
         CB8A3F9D2C8E4A1B9F3D5E7A /* Souqira.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Souqira.entitlements; sourceTree = "<group>"; };
+        D017FC80485B40D2DF365614 /* Pods_Souqira.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Souqira.framework; sourceTree = BUILT_PRODUCTS_DIR; };
         D250A303F831A4CAB452C34B /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
         D5B803A6C005BAF414AF628D /* SouqiraApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SouqiraApp.swift; sourceTree = "<group>"; };
         DEA39224A7806453D22678B8 /* LocalizedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedText.swift; sourceTree = "<group>"; };
-        E9F1A2B3C4D5E6F708192A3B /* PushNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationManager.swift; sourceTree = "<group>"; };
         FA22648959FE421C6A8530C3 /* GoogleSignInManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleSignInManager.swift; sourceTree = "<group>"; };
         FAF2BC87DF4DC14A5CD58AA7 /* ListingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingsViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -90,7 +98,7 @@
             isa = PBXFrameworksBuildPhase;
             buildActionMask = 2147483647;
             files = (
-                19CFEA7A18AE56902329BDAF /* GoogleSignIn in Frameworks */,
+                0B8316DBBFA86122CA13FB15 /* Pods_Souqira.framework in Frameworks */,
             );
             runOnlyForDeploymentPostprocessing = 0;
         };
@@ -113,6 +121,8 @@
             children = (
                 F30B822D40B82B699CCE65C0 /* SouqiraApp */,
                 A5CB4D445B07D9F97AD49363 /* Products */,
+                F7E685BC7B258A21E3BAF25E /* Pods */,
+                D2B2804B98C81F2238C9742F /* Frameworks */,
             );
             sourceTree = "<group>";
         };
@@ -142,10 +152,12 @@
             isa = PBXGroup;
             children = (
                 3A9889476040294F74D38C01 /* APIService.swift */,
+                05A1F6E21B8C4D67902F11A1 /* AppNotificationManager.swift */,
                 FA22648959FE421C6A8530C3 /* GoogleSignInManager.swift */,
                 93F9834630B21F618C34055C /* LocalizationManager.swift */,
                 72F67AD1C53558B1EA4B645D /* MockDataService.swift */,
                 0F0853B91B3C628634CEE3D2 /* NetworkManager.swift */,
+                05A1F6E41B8C4D67902F11A1 /* PushNotificationManager.swift */,
             );
             path = Services;
             sourceTree = "<group>";
@@ -153,6 +165,7 @@
         4DE6D9B66B06F0027C06E722 /* Models */ = {
             isa = PBXGroup;
             children = (
+                8C5AF0D01B8C4D67902F11A1 /* AppNotification.swift */,
                 3E6529E535A53531698E4C0D /* BusinessListing.swift */,
                 A04E231120F09FA43BA52069 /* Category.swift */,
                 4D631E56FA6A66A366C10E74 /* Message.swift */,
@@ -180,6 +193,14 @@
             path = ViewModels;
             sourceTree = "<group>";
         };
+        D2B2804B98C81F2238C9742F /* Frameworks */ = {
+            isa = PBXGroup;
+            children = (
+                D017FC80485B40D2DF365614 /* Pods_Souqira.framework */,
+            );
+            name = Frameworks;
+            sourceTree = "<group>";
+        };
         F30B822D40B82B699CCE65C0 /* SouqiraApp */ = {
             isa = PBXGroup;
             children = (
@@ -196,6 +217,16 @@
             path = SouqiraApp;
             sourceTree = "<group>";
         };
+        F7E685BC7B258A21E3BAF25E /* Pods */ = {
+            isa = PBXGroup;
+            children = (
+                14F3C147C42E200E8638DBF4 /* Pods-Souqira.debug.xcconfig */,
+                09BDE1CA4D714291136A469A /* Pods-Souqira.release.xcconfig */,
+            );
+            name = Pods;
+            path = Pods;
+            sourceTree = "<group>";
+        };
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -203,18 +234,17 @@
             isa = PBXNativeTarget;
             buildConfigurationList = C71322FCD0DBA20236D8F41C /* Build configuration list for PBXNativeTarget "Souqira" */;
             buildPhases = (
+                30C66CFA57F28C649EF45495 /* [CP] Check Pods Manifest.lock */,
                 AB0AE7E8ADFEE2C5945D7EA1 /* Sources */,
                 DE485487A66C36236EA17992 /* Resources */,
                 3BBC72D167CFE8F0CF0CE531 /* Frameworks */,
+                9F5EEA3589A6570C01B4DCE6 /* [CP] Embed Pods Frameworks */,
             );
             buildRules = (
             );
             dependencies = (
             );
             name = Souqira;
-            packageProductDependencies = (
-                969A44847E231446227EF0CE /* GoogleSignIn */,
-            );
             productName = Souqira;
             productReference = 07A31D65E851F7E49319DB87 /* Souqira.app */;
             productType = "com.apple.product-type.application";
@@ -226,7 +256,7 @@
             isa = PBXProject;
             attributes = {
                 BuildIndependentTargetsInParallel = YES;
-                LastUpgradeCheck = 1430;
+                LastUpgradeCheck = 2630;
                 TargetAttributes = {
                     261FAB5C16C2AEFA607F2E07 = {
                         DevelopmentTeam = "";
@@ -244,10 +274,7 @@
             );
             mainGroup = 1A02525D17414771268A0F2E;
             minimizedProjectReferenceProxies = 1;
-            packageReferences = (
-                340D938DF74116039EF353C9 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
-            );
-            preferredProjectObjectVersion = 77;
+            productRefGroup = A5CB4D445B07D9F97AD49363 /* Products */;
             projectDirPath = "";
             projectRoot = "";
             targets = (
@@ -267,11 +294,55 @@
         };
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+        30C66CFA57F28C649EF45495 /* [CP] Check Pods Manifest.lock */ = {
+            isa = PBXShellScriptBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+            );
+            inputFileListPaths = (
+            );
+            inputPaths = (
+                "${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+                "${PODS_ROOT}/Manifest.lock",
+            );
+            name = "[CP] Check Pods Manifest.lock";
+            outputFileListPaths = (
+            );
+            outputPaths = (
+                "$(DERIVED_FILE_DIR)/Pods-Souqira-checkManifestLockResult.txt",
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+            shellPath = /bin/sh;
+            shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+            showEnvVarsInLog = 0;
+        };
+        9F5EEA3589A6570C01B4DCE6 /* [CP] Embed Pods Frameworks */ = {
+            isa = PBXShellScriptBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+            );
+            inputFileListPaths = (
+                "${PODS_ROOT}/Target Support Files/Pods-Souqira/Pods-Souqira-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+            );
+            name = "[CP] Embed Pods Frameworks";
+            outputFileListPaths = (
+                "${PODS_ROOT}/Target Support Files/Pods-Souqira/Pods-Souqira-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+            shellPath = /bin/sh;
+            shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Souqira/Pods-Souqira-frameworks.sh\"\n";
+            showEnvVarsInLog = 0;
+        };
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
         AB0AE7E8ADFEE2C5945D7EA1 /* Sources */ = {
             isa = PBXSourcesBuildPhase;
             buildActionMask = 2147483647;
             files = (
+                8C5AF0D11B8C4D67902F11A1 /* AppNotification.swift in Sources */,
+                05A1F6E31B8C4D67902F11A1 /* AppNotificationManager.swift in Sources */,
                 21342BB275A558F1FB342061 /* APIService.swift in Sources */,
                 0715302CEC6F7C0827ED3ECF /* AppSettings.swift in Sources */,
                 57444E5BD3C067076E47847A /* AuthenticationView.swift in Sources */,
@@ -301,8 +372,8 @@
                 1B405472118A319B396B07F5 /* MockDataService.swift in Sources */,
                 578C9917BEF64896D23067F6 /* ModernListingCard.swift in Sources */,
                 77356425705472FA5BA91DB6 /* NetworkManager.swift in Sources */,
-                78A4B92C3D5E6F1A8C9D0E7B /* PushNotificationManager.swift in Sources */,
                 2F461F4F4F4FFE11AC154491 /* ProfileView.swift in Sources */,
+                05A1F6E51B8C4D67902F11A1 /* PushNotificationManager.swift in Sources */,
                 7E9D32A03FC21D68C59A9183 /* SettingsSheet.swift in Sources */,
                 F130340DD6C337714E9C6EE7 /* SouqiraApp.swift in Sources */,
                 5FB78EEA464A48DCFF365219 /* User.swift in Sources */,
@@ -349,6 +420,7 @@
                 DEBUG_INFORMATION_FORMAT = dwarf;
                 ENABLE_STRICT_OBJC_MSGSEND = YES;
                 ENABLE_TESTABILITY = YES;
+                ENABLE_USER_SCRIPT_SANDBOXING = NO;
                 GCC_C_LANGUAGE_STANDARD = gnu11;
                 GCC_DYNAMIC_NO_PIC = NO;
                 GCC_NO_COMMON_BLOCKS = YES;
@@ -369,6 +441,7 @@
                 ONLY_ACTIVE_ARCH = YES;
                 PRODUCT_NAME = "$(TARGET_NAME)";
                 SDKROOT = iphoneos;
+                STRING_CATALOG_GENERATE_SYMBOLS = YES;
                 SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
                 SWIFT_OPTIMIZATION_LEVEL = "-Onone";
                 SWIFT_VERSION = 5.0;
@@ -377,12 +450,15 @@
         };
         4ACA86DE00196781AB4077DE /* Release */ = {
             isa = XCBuildConfiguration;
+            baseConfigurationReference = 09BDE1CA4D714291136A469A /* Pods-Souqira.release.xcconfig */;
             buildSettings = {
                 ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+                CODE_SIGN_ENTITLEMENTS = SouqiraApp/Souqira.entitlements;
                 CODE_SIGN_IDENTITY = "iPhone Developer";
                 CODE_SIGN_STYLE = Automatic;
-                DEVELOPMENT_TEAM = "";
+                DEVELOPMENT_TEAM = 4CGS7989SL;
                 INFOPLIST_FILE = SouqiraApp/Info.plist;
+                INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
                 LD_RUNPATH_SEARCH_PATHS = (
                     "$(inherited)",
                     "@executable_path/Frameworks",
@@ -396,6 +472,7 @@
         };
         59D410CAE742188413EABCCE /* Debug */ = {
             isa = XCBuildConfiguration;
+            baseConfigurationReference = 14F3C147C42E200E8638DBF4 /* Pods-Souqira.debug.xcconfig */;
             buildSettings = {
                 ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
                 CODE_SIGN_ENTITLEMENTS = SouqiraApp/Souqira.entitlements;
@@ -403,6 +480,7 @@
                 CODE_SIGN_STYLE = Automatic;
                 DEVELOPMENT_TEAM = 4CGS7989SL;
                 INFOPLIST_FILE = SouqiraApp/Info.plist;
+                INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
                 LD_RUNPATH_SEARCH_PATHS = (
                     "$(inherited)",
                     "@executable_path/Frameworks",
@@ -451,6 +529,7 @@
                 DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
                 ENABLE_NS_ASSERTIONS = NO;
                 ENABLE_STRICT_OBJC_MSGSEND = YES;
+                ENABLE_USER_SCRIPT_SANDBOXING = NO;
                 GCC_C_LANGUAGE_STANDARD = gnu11;
                 GCC_NO_COMMON_BLOCKS = YES;
                 GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -464,6 +543,7 @@
                 MTL_FAST_MATH = YES;
                 PRODUCT_NAME = "$(TARGET_NAME)";
                 SDKROOT = iphoneos;
+                STRING_CATALOG_GENERATE_SYMBOLS = YES;
                 SWIFT_COMPILATION_MODE = wholemodule;
                 SWIFT_OPTIMIZATION_LEVEL = "-O";
                 SWIFT_VERSION = 5.0;
@@ -493,24 +573,6 @@
         };
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-        340D938DF74116039EF353C9 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
-            isa = XCRemoteSwiftPackageReference;
-            repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
-            requirement = {
-                kind = upToNextMajorVersion;
-                minimumVersion = 7.1.0;
-            };
-        };
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-        969A44847E231446227EF0CE /* GoogleSignIn */ = {
-            isa = XCSwiftPackageProductDependency;
-            package = 340D938DF74116039EF353C9 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
-            productName = GoogleSignIn;
-        };
-/* End XCSwiftPackageProductDependency section */
     };
     rootObject = 722ECA5D8ABEF6BD982F843E /* Project object */;
 }

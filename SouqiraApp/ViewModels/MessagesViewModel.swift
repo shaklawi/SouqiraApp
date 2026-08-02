@@ -16,15 +16,6 @@ class MessagesViewModel: ObservableObject {
     @Published var errorMessage: String?
     
     private let apiService = APIService()
-    private var refreshTimer: Timer?
-    
-    init() {
-        startAutoRefresh()
-    }
-    
-    deinit {
-        stopAutoRefresh()
-    }
     
     // MARK: - Conversations
     
@@ -45,12 +36,12 @@ class MessagesViewModel: ObservableObject {
     
     // MARK: - Messages
     
-    func loadMessages(for conversationId: String) async {
+    func loadMessages(for partnerId: String) async {
         isLoading = true
         errorMessage = nil
         
         do {
-            currentMessages = try await apiService.getMessages(conversationId: conversationId)
+            currentMessages = try await apiService.getMessages(partnerId: partnerId)
             print("✅ Loaded \(currentMessages.count) messages")
         } catch {
             errorMessage = "Failed to load messages: \(error.localizedDescription)"
@@ -60,7 +51,7 @@ class MessagesViewModel: ObservableObject {
         isLoading = false
     }
     
-    func sendMessage(to receiverId: String, listingId: String, message: String) async -> Bool {
+    func sendMessage(to receiverId: String, message: String) async -> Bool {
         guard !message.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return false
         }
@@ -68,7 +59,6 @@ class MessagesViewModel: ObservableObject {
         do {
             let sentMessage = try await apiService.sendMessage(
                 receiverId: receiverId,
-                listingId: listingId,
                 message: message
             )
             
@@ -87,31 +77,9 @@ class MessagesViewModel: ObservableObject {
         }
     }
     
-    // MARK: - Auto Refresh
-    
-    private func startAutoRefresh() {
-        // Refresh conversations every 10 seconds
-        refreshTimer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { [weak self] _ in
-            Task { @MainActor in
-                await self?.loadConversations()
-            }
-        }
-    }
-    
-    nonisolated private func stopAutoRefresh() {
-        Task { @MainActor in
-            refreshTimer?.invalidate()
-            refreshTimer = nil
-        }
-    }
-    
     // MARK: - Helpers
     
-    func getUnreadCount() -> Int {
-        conversations.reduce(0) { $0 + $1.unreadCount }
-    }
-    
     func getOtherParticipant(in conversation: Conversation, currentUserId: String) -> MessageUser? {
-        conversation.participants.first { $0.id != currentUserId }
+        conversation.partner
     }
 }

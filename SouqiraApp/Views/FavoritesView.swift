@@ -38,8 +38,13 @@ struct FavoritesView: View {
                         }
                         .padding(12)
                     }
+                    .refreshable {
+                        await loadFavorites()
+                    }
+                    .frame(maxHeight: .infinity, alignment: .top)
                 }
             }
+            .frame(maxHeight: .infinity, alignment: .top)
             .navigationTitle(LocalizationManager.favorites.get(language: appSettings.language))
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {

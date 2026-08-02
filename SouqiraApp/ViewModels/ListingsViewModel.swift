@@ -10,6 +10,9 @@ import SwiftUI
 
 @MainActor
 class ListingsViewModel: ObservableObject {
+    private static var cachedCategories: [Category] = []
+    private static var cachedRegions: [Region] = []
+
     @Published var listings: [BusinessListing] = []
     @Published var categories: [Category] = []
     @Published var regions: [Region] = []
@@ -26,35 +29,40 @@ class ListingsViewModel: ObservableObject {
     
     private var currentPage = 1
     private let apiService = APIService()
+
+    init() {}
     
-    init() {
-        Task {
-            await loadCategoriesAndRegions()
-            await fetchListings(refresh: true)
+    func loadCategoriesAndRegions(forceRefresh: Bool = false) async {
+        if !forceRefresh, !Self.cachedCategories.isEmpty, !Self.cachedRegions.isEmpty {
+            categories = Self.cachedCategories
+            regions = Self.cachedRegions
+            return
         }
-    }
-    
-    func loadCategoriesAndRegions() async {
+
         do {
-            categories = try await apiService.fetchCategories()
-            regions = try await apiService.fetchRegions()
+            async let fetchedCategories = apiService.fetchCategories()
+            async let fetchedRegions = apiService.fetchRegions()
+
+            let (loadedCategories, loadedRegions) = try await (fetchedCategories, fetchedRegions)
+            categories = loadedCategories
+            regions = loadedRegions
+            Self.cachedCategories = loadedCategories
+            Self.cachedRegions = loadedRegions
         } catch {
             print("Failed to load categories/regions: \(error)")
         }
     }
     
     func fetchListings(refresh: Bool = false) async {
+        let previousListings = listings
+
         if refresh {
             currentPage = 1
-            listings = []
         }
         
         guard !isLoading else { return }
         isLoading = true
         errorMessage = nil
-        
-        print("🔍 [ListingsViewModel] Starting fetchListings - page: \(currentPage)")
-        print("🔍 [ListingsViewModel] Filters - category: \(selectedCategory?.id ?? "none"), region: \(selectedRegion?.id ?? "none"), search: '\(searchQuery)'")
         
         do {
             let response = try await apiService.fetchListings(
@@ -67,28 +75,26 @@ class ListingsViewModel: ObservableObject {
             )
             
             if refresh {
-                listings = response.listings
+                let hasActiveFilters = selectedCategory != nil
+                    || selectedRegion != nil
+                    || !searchQuery.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    || minPrice > 0
+                    || maxPrice < 100000
+
+                // Keep current feed if a plain pull-to-refresh returns no items.
+                if response.listings.isEmpty, !previousListings.isEmpty, !hasActiveFilters {
+                    listings = previousListings
+                } else {
+                    listings = response.listings
+                }
             } else {
                 listings.append(contentsOf: response.listings)
             }
             
             hasMorePages = currentPage < response.pages
             currentPage += 1
-            
-            print("✅ Loaded \(response.listings.count) listings (page \(currentPage - 1) of \(response.pages))")
         } catch {
-            print("❌ Failed to load listings: \(error)")
-            print("❌ Error type: \(type(of: error))")
-            if let nsError = error as NSError? {
-                print("❌ NSError domain: \(nsError.domain), code: \(nsError.code)")
-                print("❌ NSError userInfo: \(nsError.userInfo)")
-            }
             errorMessage = "Failed to load listings"
-            
-            // If this is the first load and we have no data, still show error but listings might have mock data
-            if listings.isEmpty && refresh {
-                print("⚠️ No listings available")
-            }
         }
         
         isLoading = false

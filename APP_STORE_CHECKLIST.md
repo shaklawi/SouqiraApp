@@ -19,29 +19,22 @@ All required privacy usage descriptions have been added to `Info.plist`:
 
 ### 3. AppIcon Configuration ✅
 - ✅ Contents.json updated with all required icon sizes
-- ⚠️ **ACTION NEEDED**: Add actual app icon images (see below)
+- ✅ Actual app icon images added, including 1024x1024 marketing icon
 
 ---
 
 ## 🔴 CRITICAL: Required Actions Before App Store Submission
 
-### 1. Add Apple Developer Team ID
-📝 **File to edit:** `project.yml` (line 22)
-
-```yaml
-DEVELOPMENT_TEAM: "XXXXXXXXXX"  # Replace with your 10-character Team ID
-```
-
-**How to find your Team ID:**
-1. Go to https://developer.apple.com/account
-2. Click "Membership" in the sidebar
-3. Copy your Team ID (10 characters, e.g., "AB12CD34EF")
+### 1. Apple Developer Team ID
+- ✅ Configured in `project.yml`
+- ✅ Configured in `ExportOptions.plist`
+- Team ID: `4CGS7989SL`
 
 ---
 
-### 2. Generate and Add App Icons
+### 2. App Icons
 
-You need to create app icons in the following sizes and add them to:
+App icons are already present in:
 `SouqiraApp/Assets.xcassets/AppIcon.appiconset/`
 
 **Required icon files:**
@@ -64,16 +57,7 @@ You need to create app icons in the following sizes and add them to:
 - `AppIcon-76x76@2x.png` (152×152px)
 - `AppIcon-83.5x83.5@2x.png` (167×167px)
 
-**Tools to generate icons:**
-- Online: https://appicon.co/ (Upload 1024×1024 image, download all sizes)
-- macOS: Use Preview or Sketch to export different sizes
-- Command line: Use ImageMagick or sips
-
-**Design guidelines:**
-- No transparency (use solid background)
-- No rounded corners (iOS adds them automatically)
-- Simple, recognizable design
-- Test at small sizes (20×20px should still be clear)
+If you replace the icon later, regenerate the full set from the 1024x1024 source and keep the same filenames.
 
 ---
 
@@ -91,9 +75,9 @@ You need to create app icons in the following sizes and add them to:
    - **Subtitle:** (35 characters max) e.g., "Buy & Sell Businesses"
    - **Description:** Write compelling description about Souqira
    - **Keywords:** business, marketplace, Iraq, Erbil, listings, etc.
-   - **Support URL:** Your support website
+  - **Support URL:** https://www.souqira.com
    - **Marketing URL:** (optional) Your marketing website
-   - **Privacy Policy URL:** **REQUIRED** - Create privacy policy
+  - **Privacy Policy URL:** https://souqira.com/en/privacy-policy
 
 4. **Screenshots Required:**
    - iPhone 6.7" Display (iPhone 14 Pro Max):
@@ -107,30 +91,29 @@ You need to create app icons in the following sizes and add them to:
      - Size: 2048×2732px or 2732×2048px
 
 5. **App Review Information:**
-   - Demo account credentials (if login required)
+  - Demo account credentials: not required for browsing
    - Contact information
    - Notes for reviewer
 
+  Suggested review note:
+  `Reviewers can browse listings without signing in. Sign-in is only required for posting listings, saving favorites, and messaging.`
+
 ---
 
-### 4. Privacy Policy (REQUIRED)
+### 4. Privacy Policy
 
-You **MUST** have a privacy policy URL. Create a page explaining:
-- What data you collect (location, photos, contacts, etc.)
-- How you use the data
-- How users can delete their data
-- Third-party services (Google Sign-In, etc.)
-
-**Host it on:**
-- Your website
-- GitHub Pages (free)
-- Privacy policy generators online
+- ✅ Privacy policy URL available: https://souqira.com/en/privacy-policy
+- Verify the page is publicly accessible and accurately describes:
+  - account and authentication data
+  - listing photos and content
+  - location usage
+  - messaging/contact flows
 
 ---
 
 ### 5. Build & Archive for Release
 
-After adding Team ID:
+Current release config is set. Next step is generating the project and archiving:
 
 ```bash
 cd /Users/user291714/SouqiraApp
@@ -248,12 +231,11 @@ If you encounter issues during submission:
 
 ## 🎯 Estimated Timeline
 
-1. **Setup (Today):** Add Team ID, generate icons → 1-2 hours
-2. **App Store Connect:** Create listing, add metadata → 2-3 hours
-3. **Screenshots:** Create and upload → 1-2 hours
-4. **Archive & Upload:** Build and submit → 1 hour
-5. **App Review:** Apple's review process → 1-3 days (average)
-6. **Release:** Manual or automatic after approval
+1. **App Store Connect:** Create listing, add metadata → 1-2 hours
+2. **Screenshots:** Create and upload → 1-2 hours
+3. **Archive & Upload:** Build and submit → 30-60 minutes
+4. **App Review:** Apple's review process → 1-3 days (average)
+5. **Release:** Manual or automatic after approval
 
 **Total:** ~1 week from preparation to App Store
 

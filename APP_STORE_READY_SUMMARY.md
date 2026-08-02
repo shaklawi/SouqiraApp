@@ -1,9 +1,8 @@
-# ✅ Souqira App - App Store Readiness Complete!
+# ✅ Souqira App - App Store Release Setup Updated
 
-## 🎉 All Preparatory Work Completed
+## 🎉 Current Release Preparation Status
 
-Date: February 21, 2026  
-Commit: 54e50d6
+Date: March 18, 2026
 
 ---
 
@@ -21,22 +20,18 @@ Added all required privacy usage descriptions:
 ### 2. **project.yml - Versioning & Configuration** ✅
 - ✅ Added `MARKETING_VERSION: "1.0.0"`
 - ✅ Added `CURRENT_PROJECT_VERSION: "1"`
-- ✅ Added placeholder for `DEVELOPMENT_TEAM` with instructions
+- ✅ Configured `DEVELOPMENT_TEAM: "4CGS7989SL"`
 
 ### 3. **AppIcon Configuration** ✅
 - ✅ Updated `Contents.json` with all required icon sizes
+- ✅ App icon image set is present in the asset catalog
 - ✅ Configured for iPhone (all sizes: 20pt to 60pt @2x and @3x)
 - ✅ Configured for iPad (all sizes: 20pt to 83.5pt)
 - ✅ Configured App Store icon (1024x1024)
 
 ### 4. **Documentation** ✅
 - ✅ Created comprehensive `APP_STORE_CHECKLIST.md`
-  - Step-by-step submission guide
-  - Required icon sizes list
-  - App Store Connect setup instructions
-  - Testing checklist
-  - Common rejection reasons
-  - Timeline estimates
+- ✅ Added project-specific metadata draft and updated URLs
 - ✅ Created `ExportOptions.plist` for distribution
 
 ### 5. **Testing** ✅
@@ -47,93 +42,55 @@ Added all required privacy usage descriptions:
 
 ---
 
-## 🔴 What You Need To Do Next (CRITICAL)
+## 🔴 What You Still Need To Do In App Store Connect
 
-### Step 1: Add Your Apple Developer Team ID
-**File:** `project.yml` (line 22)
+### Step 1: Create the App Store Connect record
 
-```yaml
-DEVELOPMENT_TEAM: "XXXXXXXXXX"  # Replace with your actual Team ID
-```
-
-**Where to find it:**
-1. Go to https://developer.apple.com/account
-2. Click "Membership"
-3. Copy your 10-character Team ID
-
----
-
-### Step 2: Generate & Add App Icons
-
-**You need to create app icons and add them to:**
-`SouqiraApp/Assets.xcassets/AppIcon.appiconset/`
-
-**Quick Method:**
-1. Design a 1024×1024px icon (no transparency, no rounded corners)
-2. Use https://appicon.co/ to generate all sizes
-3. Download the zip
-4. Copy all PNG files to the AppIcon.appiconset folder
-
-**Required files:**
-- AppIcon-1024x1024.png (1024×1024) ← MOST IMPORTANT
-- AppIcon-20x20.png through AppIcon-83.5x83.5@2x.png (see checklist for full list)
+Use these values:
+- Name: `Souqira`
+- Bundle ID: `com.souqira.app`
+- SKU: `souqira-ios-001`
+- Category: `Business`
+- Secondary category: `Shopping`
+- Support URL: `https://www.souqira.com`
+- Privacy Policy URL: `https://souqira.com/en/privacy-policy`
 
 ---
 
-### Step 3: Create Privacy Policy
+### Step 2: Add metadata
 
-**REQUIRED BY APPLE**
-
-Create a webpage with your privacy policy explaining:
-- What data you collect (location, photos, contacts)
-- How you use it
-- Third-party services (Google Sign-In)
-- How users can delete their data
-
-**Where to host:**
-- Your website
-- GitHub Pages (free)
-- Privacy policy generator services
-
-You'll need the URL when creating your App Store Connect listing.
+Prepared metadata is now documented in `APP_STORE_METADATA.md`, including:
+- subtitle options
+- promotional text
+- full description
+- keywords
+- review notes
 
 ---
 
-### Step 4: Prepare App Store Connect
+### Step 3: Upload screenshots
 
-1. **Go to:** https://appstoreconnect.apple.com
-2. **Click:** "My Apps" → "+" → "New App"
-3. **Fill in:**
-   - Platform: iOS
-   - Name: Souqira
-   - Primary Language: (Choose: English, Arabic, or Kurdish)
-   - Bundle ID: com.souqira.app
-   - SKU: souqira-app-001
-
-4. **Prepare:**
-   - App description (detailed)
-   - Keywords
-   - Screenshots (iPhone 6.7" and 6.5" displays)
-   - Privacy Policy URL
-   - Support URL
-   - Demo account (if login required)
+Recommended captures:
+- home feed
+- listing detail
+- city browsing
+- favorites
+- profile
 
 ---
 
-### Step 5: Take Screenshots
+### Step 4: Archive and upload
 
-**Required sizes:**
-- iPhone 6.7" (iPhone 14 Pro Max): 1290×2796px
-- iPhone 6.5" (iPhone 11 Pro Max): 1242×2688px
+The project is configured for App Store export with Team ID `4CGS7989SL`.
 
-**Tip:** Use iPhone Simulator to run app, then take screenshots with Cmd+S
+---
 
-**Recommended screens to capture:**
-- Home screen with listings
-- Listing detail view
-- Search/filter view
-- Profile view
-- Create listing view (if applicable)
+### Step 5: App Review notes
+
+No reviewer login is required for browsing.
+
+Suggested note:
+`Reviewers can browse listings without signing in. Sign-in is only required for posting listings, saving favorites, and messaging.`
 
 ---
 
@@ -178,9 +135,9 @@ xcodebuild -exportArchive \
 | Bundle ID | ✅ Complete | com.souqira.app |
 | API Endpoint | ✅ Complete | https://api.souqira.com |
 | AppIcon Config | ✅ Complete | Contents.json configured |
-| Team ID | ⚠️ **Required** | Must be added by you |
-| App Icons | ⚠️ **Required** | Must be generated & added |
-| Privacy Policy | ⚠️ **Required** | Must be created |
+| Team ID | ✅ Complete | 4CGS7989SL configured |
+| App Icons | ✅ Complete | Asset catalog populated |
+| Privacy Policy | ✅ Complete | Public URL provided |
 | Screenshots | ⚠️ **Required** | Must be captured |
 | App Store Listing | ⚠️ **Required** | Must be created |
 
@@ -188,15 +145,12 @@ xcodebuild -exportArchive \
 
 ## ⏱️ Estimated Time to Completion
 
-- **Add Team ID:** 2 minutes
-- **Generate App Icons:** 30 minutes (design + generate)
-- **Create Privacy Policy:** 1 hour (write + host)
-- **App Store Connect Setup:** 2 hours (listing + metadata)
+- **App Store Connect Setup:** 1-2 hours (listing + metadata)
 - **Screenshots:** 1 hour (capture + upload)
 - **Build & Upload:** 30 minutes
 - **Apple Review:** 1-3 days (average)
 
-**Total Time Required:** ~5-6 hours of work + Apple review time
+**Total Time Required:** ~3-4 hours of work + Apple review time
 
 ---
 
@@ -215,13 +169,10 @@ xcodebuild -exportArchive \
 
 ## 🎯 Next Immediate Action
 
-**Right now, do this:**
-
-1. **Open:** https://developer.apple.com/account
-2. **Get your Team ID**
-3. **Edit:** `/Users/user291714/SouqiraApp/project.yml`
-4. **Replace:** Line 22 with your actual Team ID
-5. **Then:** Start designing your app icon!
+1. Create the app in App Store Connect
+2. Paste in the metadata from `APP_STORE_METADATA.md`
+3. Capture screenshots from the simulator or a physical device
+4. Archive and upload the build from Xcode
 
 ---
 
@@ -229,23 +180,17 @@ xcodebuild -exportArchive \
 
 ```
 Modified:
-- SouqiraApp/Info.plist (added privacy keys)
-- project.yml (added versioning)
+- SouqiraApp/Info.plist (privacy keys already added)
+- project.yml (Team ID configured)
+- ExportOptions.plist (Team ID configured, automatic signing export)
 - SouqiraApp/Assets.xcassets/AppIcon.appiconset/Contents.json
+- APP_STORE_CHECKLIST.md
+- APP_STORE_READY_SUMMARY.md
 
 Created:
-- APP_STORE_CHECKLIST.md (detailed guide)
-- ExportOptions.plist (for distribution)
-- APP_STORE_READY_SUMMARY.md (this file)
+- APP_STORE_METADATA.md (submission metadata draft)
 ```
 
 ---
 
-**All code changes have been committed and pushed to GitHub! 🚀**
-
-Commit: `54e50d6`  
-Message: "🚀 App Store readiness: Add privacy keys, marketing version, app icon config, and submission checklist"
-
----
-
-**Good luck with your App Store submission! You're 80% there! 🎉**
+The remaining work is operational in App Store Connect and Xcode upload flow.

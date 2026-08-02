@@ -8,86 +8,83 @@
 import Foundation
 
 // MARK: - Conversation
-struct Conversation: Identifiable, Codable {
-    let id: String
-    let participants: [MessageUser]
-    let listing: MessageListing?
-    let lastMessage: Message?
-    let unreadCount: Int
-    let createdAt: Date
-    let updatedAt: Date
-    
+// Matches backend: GET /api/message/me → { _id, partner, latestMessage }
+struct Conversation: Identifiable, Decodable {
+    let id: String          // partner user id (used as unique conversation key)
+    let partner: MessageUser
+    let latestMessage: Message
+
     enum CodingKeys: String, CodingKey {
         case id = "_id"
-        case participants
-        case listing
-        case lastMessage
-        case unreadCount
-        case createdAt
-        case updatedAt
+        case partner
+        case latestMessage
     }
 }
 
 // MARK: - Message
-struct Message: Identifiable, Codable {
+// Matches backend: { _id, sender, receiver, content, isRead, createdAt }
+struct Message: Identifiable, Decodable {
     let id: String
-    let conversationId: String
     let senderId: String
     let receiverId: String
-    let message: String
+    let content: String
     let isRead: Bool
     let createdAt: Date
-    
+
     enum CodingKeys: String, CodingKey {
         case id = "_id"
-        case conversationId
-        case senderId
-        case receiverId
-        case message
+        case senderId = "sender"
+        case receiverId = "receiver"
+        case content
         case isRead
         case createdAt
     }
 }
 
 // MARK: - MessageUser
-struct MessageUser: Identifiable, Codable {
+// Matches backend partner projection: { _id, username, email, firstname, lastname, role }
+struct MessageUser: Identifiable, Decodable {
     let id: String
-    let name: String
     let email: String?
-    let phone: String?
-    
+    let firstname: String?
+    let lastname: String?
+    let username: String?
+
+    var name: String {
+        let full = [firstname, lastname].compactMap { $0 }.joined(separator: " ")
+        if !full.trimmingCharacters(in: .whitespaces).isEmpty { return full }
+        return username ?? email?.components(separatedBy: "@").first ?? id
+    }
+
     enum CodingKeys: String, CodingKey {
         case id = "_id"
-        case name
         case email
-        case phone
+        case firstname
+        case lastname
+        case username
     }
 }
 
-// MARK: - MessageListing
-struct MessageListing: Identifiable, Codable {
-    let id: String
-    let title: String
-    let price: Double
-    let currency: String
-    let images: [String]
-    
-    var primaryImage: String {
-        images.first ?? ""
-    }
-    
-    enum CodingKeys: String, CodingKey {
-        case id = "_id"
-        case title
-        case price
-        case currency
-        case images
-    }
+// MARK: - Conversation Messages Response
+// Matches: GET /api/message/:userId → { messages, total, page, limit, userInfo }
+struct ConversationMessagesResponse: Decodable {
+    let messages: [Message]
+    let total: Int
+    let page: Int
+    let limit: Int
+    let userInfo: ConversationUserInfo
 }
 
-// MARK: - Message Request
-struct SendMessageRequest: Codable {
-    let receiverId: String
-    let listingId: String
-    let message: String
+struct ConversationUserInfo: Decodable {
+    let otherUserId: String
+    let firstname: String?
+    let lastname: String?
+    let otherEmail: String?
+}
+
+// MARK: - Send Message Request
+// Matches: POST /api/message  { receiver, content }
+struct SendMessageRequest: Encodable {
+    let receiver: String
+    let content: String
 }

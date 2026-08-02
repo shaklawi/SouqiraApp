@@ -5,11 +5,6 @@ options:
     iOS: "16.0"
   developmentLanguage: en
 
-packages:
-  GoogleSignIn:
-    url: https://github.com/google/GoogleSignIn-iOS
-    majorVersion: 7.1.0
-  
 targets:
   Souqira:
     type: application
@@ -19,16 +14,13 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.souqira.app
-        DEVELOPMENT_TEAM: ""  # Add your Apple Team ID here (e.g., "XXXXXXXXXX")
-        MARKETING_VERSION: "1.0.0"
-        CURRENT_PROJECT_VERSION: "1"
+        DEVELOPMENT_TEAM: "4CGS7989SL"
+        MARKETING_VERSION: "1.0.3"
+        CURRENT_PROJECT_VERSION: "5"
         INFOPLIST_FILE: SouqiraApp/Info.plist
         SWIFT_VERSION: "5.0"
         TARGETED_DEVICE_FAMILY: "1,2"
         CODE_SIGN_STYLE: Automatic
-    dependencies:
-      - package: GoogleSignIn
-        product: GoogleSignIn
 
 schemes:
   Souqira:

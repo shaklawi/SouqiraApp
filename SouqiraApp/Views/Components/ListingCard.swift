@@ -14,7 +14,7 @@ struct ListingCard: View {
         HStack(spacing: 0) {
             // Image section - larger and more prominent
             ZStack(alignment: .topLeading) {
-                AsyncImage(url: URL(string: listing.images.first ?? "")) { image in
+                CachedRemoteImage(url: URL(string: listing.images.first ?? "")) { image in
                     image
                         .resizable()
                         .scaledToFill()
@@ -22,8 +22,8 @@ struct ListingCard: View {
                     ZStack {
                         LinearGradient(
                             colors: [
-                                Color.blue.opacity(0.15),
-                                Color.purple.opacity(0.12)
+                                DesignSystem.Colors.primary.opacity(0.12),
+                                DesignSystem.Colors.secondary.opacity(0.14)
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
@@ -33,7 +33,7 @@ struct ListingCard: View {
                             .font(.system(size: 38, weight: .semibold))
                             .foregroundStyle(
                                 LinearGradient(
-                                    colors: [.blue.opacity(0.5), .purple.opacity(0.5)],
+                                    colors: [DesignSystem.Colors.primary.opacity(0.65), DesignSystem.Colors.secondary.opacity(0.7)],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 )
@@ -58,12 +58,12 @@ struct ListingCard: View {
                         Capsule()
                             .fill(
                                 LinearGradient(
-                                    colors: [Color(red: 1.0, green: 0.6, blue: 0.0), Color(red: 1.0, green: 0.3, blue: 0.3)],
+                                    colors: [DesignSystem.Colors.secondary, DesignSystem.Colors.accent],
                                     startPoint: .leading,
                                     endPoint: .trailing
                                 )
                             )
-                            .shadow(color: .orange.opacity(0.4), radius: 6, x: 0, y: 2)
+                            .shadow(color: DesignSystem.Colors.secondary.opacity(0.38), radius: 6, x: 0, y: 2)
                     )
                     .padding(10)
                 }
@@ -74,7 +74,7 @@ struct ListingCard: View {
             VStack(alignment: .leading, spacing: 8) {
                 // Title - larger and bolder
                 Text(listing.title)
-                    .font(.system(size: 17, weight: .bold, design: .rounded))
+                    .font(.system(size: 17, weight: .bold, design: .serif))
                     .lineLimit(2)
                     .truncationMode(.tail)
                     .foregroundColor(.primary)
@@ -87,7 +87,7 @@ struct ListingCard: View {
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [.blue, .purple],
+                                colors: [DesignSystem.Colors.primary, DesignSystem.Colors.secondary],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -107,7 +107,7 @@ struct ListingCard: View {
                         .font(.system(size: 18, weight: .heavy, design: .rounded))
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [Color(red: 0.2, green: 0.5, blue: 1.0), Color(red: 0.6, green: 0.3, blue: 0.9)],
+                                colors: [DesignSystem.Colors.primary, DesignSystem.Colors.secondaryDark],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -128,7 +128,7 @@ struct ListingCard: View {
                     .padding(.vertical, 6)
                     .background(
                         Capsule()
-                            .fill(Color(.systemGray5))
+                            .fill(DesignSystem.Colors.gray100)
                     )
                 }
             }
@@ -140,15 +140,15 @@ struct ListingCard: View {
         .frame(height: 130)
         .background(
             RoundedRectangle(cornerRadius: 18)
-                .fill(Color(.systemBackground))
+                .fill(DesignSystem.Colors.card)
         )
         .clipShape(RoundedRectangle(cornerRadius: 18))
-        .shadow(color: .black.opacity(0.06), radius: 16, x: 0, y: 4)
+        .shadow(color: DesignSystem.Colors.primary.opacity(0.1), radius: 18, x: 0, y: 8)
         .overlay(
             RoundedRectangle(cornerRadius: 18)
                 .stroke(
                     LinearGradient(
-                        colors: [Color.blue.opacity(0.15), Color.purple.opacity(0.1)],
+                        colors: [DesignSystem.Colors.gray200.opacity(0.9), DesignSystem.Colors.secondary.opacity(0.2)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     ),

@@ -13,7 +13,7 @@ struct ModernListingCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Image
-            AsyncImage(url: URL(string: listing.images.first ?? "")) { image in
+            CachedRemoteImage(url: URL(string: listing.images.first ?? "")) { image in
                 image
                     .resizable()
                     .scaledToFill()

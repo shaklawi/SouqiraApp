@@ -11,6 +11,7 @@ struct FilterView: View {
     @ObservedObject var viewModel: ListingsViewModel
     @Environment(\.dismiss) var dismiss
     @State private var categories: [Category] = []
+    @State private var regions: [Region] = []
     @State private var isLoadingCategories = false
     
     private let apiService = APIService()
@@ -36,7 +37,7 @@ struct FilterView: View {
                 Section("Region") {
                     Picker("Select Region", selection: $viewModel.selectedRegion) {
                         Text("All Regions").tag(nil as Region?)
-                        ForEach(viewModel.regions) { region in
+                        ForEach(regions) { region in
                             HStack {
                                 Text(region.emoji)
                                 Text(region.nameEn)
@@ -105,17 +106,20 @@ struct FilterView: View {
                 }
             }
             .task {
-                await loadCategories()
+                await loadFilterData()
             }
         }
     }
     
-    private func loadCategories() async {
+    private func loadFilterData() async {
         isLoadingCategories = true
         do {
-            categories = try await apiService.fetchCategories()
+            async let fetchedCategories = apiService.fetchCategories()
+            async let fetchedRegions = apiService.fetchRegions()
+            categories = try await fetchedCategories
+            regions = try await fetchedRegions
         } catch {
-            print("Failed to load categories: \(error)")
+            print("Failed to load filters: \(error)")
         }
         isLoadingCategories = false
     }

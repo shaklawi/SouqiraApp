@@ -87,6 +87,10 @@ struct Category: Codable, Identifiable, Hashable {
             names = ("Find a Partner", "ابحث عن شريك", "دۆزینەوەی هاوبەش")
         case "find_an_investor":
             names = ("Find an Investor", "ابحث عن مستثمر", "دۆزینەوەی وەبەرهێنەر")
+        case "looking_to_buy_running_business":
+            names = ("Buy a Running Business", "شراء مشروع قائم", "کڕینی کاروباری چالاک")
+        case "looking_for_shop_for_sale_in_specific_location":
+            names = ("Looking for an Empty Shop", "أبحث عن محل فارغ", "گەڕان بەدوای دوکانی بەتاڵ")
         default:
             let fallback = normalizedId.replacingOccurrences(of: "_", with: " ").capitalized
             return fallback

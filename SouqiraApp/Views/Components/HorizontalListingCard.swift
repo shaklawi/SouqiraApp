@@ -13,7 +13,7 @@ struct HorizontalListingCard: View {
     var body: some View {
         HStack(spacing: 14) {
             // Image
-            AsyncImage(url: URL(string: listing.images.first ?? "")) { image in
+            CachedRemoteImage(url: URL(string: listing.images.first ?? "")) { image in
                 image
                     .resizable()
                     .scaledToFill()

@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.0.5</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -30,7 +30,9 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>7</string>
+	<key>APIBaseURL</key>
+	<string>https://api.souqira.com</string>
 	<key>GIDClientID</key>
 	<string>595247213772-75tthlksh64g6oe8bdnujslans1o0asu.apps.googleusercontent.com</string>
 	<key>GIDServerClientID</key>

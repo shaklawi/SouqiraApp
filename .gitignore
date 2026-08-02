@@ -120,6 +120,16 @@ android/keystore.properties
 android/**/*.jks
 android/**/*.keystore
 
+# Android local/build artifacts
+android/.gradle/
+android/local.properties
+android/app/release/
+android/.idea/inspectionProfiles/
+android/.idea/runConfigurations/
+
+# Local archives and diagnostics
+*.zip
+
 # Firebase / FCM secrets
 android/app/google-services.json
 google-services.json

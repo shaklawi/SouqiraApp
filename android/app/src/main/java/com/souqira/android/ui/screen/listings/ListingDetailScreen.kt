@@ -4,13 +4,17 @@ import android.content.Intent
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +24,10 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,18 +38,23 @@ import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.AddPhotoAlternate
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.ui.graphics.vector.ImageVector
 import coil.compose.AsyncImage
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.AlertDialog
@@ -51,6 +64,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -65,15 +79,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.google.gson.JsonElement
 import com.souqira.android.R
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.souqira.android.ui.viewmodel.ListingDetailViewModel
+import java.io.File
+import kotlinx.coroutines.delay
 
 @Composable
+@OptIn(ExperimentalFoundationApi::class)
 fun ListingDetailScreen(
     listingId: String,
+    ownerAction: String? = null,
     isAuthenticated: Boolean,
     viewModel: ListingDetailViewModel,
     onBack: () -> Unit,
@@ -84,22 +103,62 @@ fun ListingDetailScreen(
     val context = LocalContext.current
     var showBlockDialog by remember { mutableStateOf(false) }
     var showReportDialog by remember { mutableStateOf(false) }
+    var showEditDialog by remember { mutableStateOf(false) }
+    var showImageViewer by remember { mutableStateOf(false) }
+    var imageViewerIndex by remember { mutableStateOf(0) }
+    var hasHandledOwnerAction by remember(listingId, ownerAction) { mutableStateOf(false) }
+    val pendingImageUris = remember { mutableStateListOf<Uri>() }
+    val contentScrollState = rememberScrollState()
+    val imagePicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetMultipleContents()
+    ) { uris ->
+        val room = (10 - pendingImageUris.size).coerceAtLeast(0)
+        if (room > 0) {
+            pendingImageUris.addAll(uris.take(room))
+        }
+    }
 
-    LaunchedEffect(listingId) {
+    LaunchedEffect(listingId, isAuthenticated) {
         viewModel.loadListing(id = listingId, tryMineFirst = isAuthenticated)
     }
 
     val listing = uiState.listing
+    val editableImageUrls = remember(listing?.id) { mutableStateListOf<String>() }
+    var editTitle by remember(listing?.id) { mutableStateOf("") }
+    var editDescription by remember(listing?.id) { mutableStateOf("") }
+    var editPrice by remember(listing?.id) { mutableStateOf("") }
+    var editLocation by remember(listing?.id) { mutableStateOf("") }
+    var editPhone by remember(listing?.id) { mutableStateOf("") }
+
+    LaunchedEffect(listing?.images) {
+        editableImageUrls.clear()
+        editableImageUrls.addAll(listing?.images.orEmpty())
+    }
+
+    LaunchedEffect(listing?.id) {
+        val current = listing ?: return@LaunchedEffect
+        editTitle = current.title
+        editDescription = current.description
+        editPrice = current.price.toString()
+        editLocation = current.location
+        editPhone = current.phone.orEmpty()
+    }
 
     LaunchedEffect(uiState.statusMessage) {
         val message = uiState.statusMessage ?: return@LaunchedEffect
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        Toast.makeText(context, localizeListingDetailMessage(context, message), Toast.LENGTH_LONG).show()
+        if (message.contains("images updated", ignoreCase = true)) {
+            pendingImageUris.clear()
+        }
+        if (message.contains("listing updated", ignoreCase = true)) {
+            showEditDialog = false
+        }
         viewModel.consumeStatusMessage()
     }
 
     LaunchedEffect(uiState.errorMessage) {
         val message = uiState.errorMessage ?: return@LaunchedEffect
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        Toast.makeText(context, localizeListingDetailMessage(context, message), Toast.LENGTH_LONG).show()
         viewModel.consumeErrorMessage()
     }
 
@@ -128,36 +187,69 @@ fun ListingDetailScreen(
 
         if (listing == null) return@Box
 
-        val imageUrl = listing.images.firstOrNull().orEmpty()
+        val imageUrls = if (listing.images.isNotEmpty()) listing.images else listOf("")
+        val pagerState = rememberPagerState(pageCount = { imageUrls.size })
         val ownerId = extractOwnerId(listing.owner)
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(contentScrollState)
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(360.dp)
             ) {
-                if (imageUrl.isNotBlank()) {
-                    AsyncImage(
-                        model = imageUrl,
-                        contentDescription = listing.title,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                Brush.linearGradient(
-                                    listOf(Color(0xFF2D4A7A), Color(0xFF1B2E52))
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier.fillMaxSize()
+                ) { page ->
+                    val imageUrl = imageUrls[page]
+                    if (imageUrl.isNotBlank()) {
+                        AsyncImage(
+                            model = imageUrl,
+                            contentDescription = listing.title,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clickable {
+                                    imageViewerIndex = page
+                                    showImageViewer = true
+                                }
+                        )
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    Brush.linearGradient(
+                                        listOf(Color(0xFF2D4A7A), Color(0xFF1B2E52))
+                                    )
                                 )
+                        )
+                    }
+                }
+
+                if (imageUrls.size > 1) {
+                    Row(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 18.dp),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        repeat(imageUrls.size) { index ->
+                            val isSelected = pagerState.currentPage == index
+                            Box(
+                                modifier = Modifier
+                                    .size(if (isSelected) 9.dp else 7.dp)
+                                    .clip(CircleShape)
+                                    .background(
+                                        if (isSelected) Color.White else Color.White.copy(alpha = 0.55f)
+                                    )
                             )
-                    )
+                        }
+                    }
                 }
 
                 Box(
@@ -318,6 +410,90 @@ fun ListingDetailScreen(
                         )
                     }
 
+                    if (showEditDialog) {
+                        AlertDialog(
+                            onDismissRequest = {
+                                if (!uiState.isSavingDetails) {
+                                    showEditDialog = false
+                                }
+                            },
+                            title = {
+                                Text(stringResource(R.string.listing_edit_details))
+                            },
+                            text = {
+                                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    OutlinedTextField(
+                                        value = editTitle,
+                                        onValueChange = { editTitle = it },
+                                        label = { Text(stringResource(R.string.create_listing_field_title)) },
+                                        singleLine = true,
+                                        enabled = !uiState.isSavingDetails
+                                    )
+                                    OutlinedTextField(
+                                        value = editDescription,
+                                        onValueChange = { editDescription = it },
+                                        label = { Text(stringResource(R.string.create_listing_field_description)) },
+                                        minLines = 3,
+                                        enabled = !uiState.isSavingDetails
+                                    )
+                                    OutlinedTextField(
+                                        value = editPrice,
+                                        onValueChange = { editPrice = it },
+                                        label = { Text(stringResource(R.string.create_listing_field_price)) },
+                                        singleLine = true,
+                                        enabled = !uiState.isSavingDetails
+                                    )
+                                    OutlinedTextField(
+                                        value = editLocation,
+                                        onValueChange = { editLocation = it },
+                                        label = { Text(stringResource(R.string.create_listing_region)) },
+                                        singleLine = true,
+                                        enabled = !uiState.isSavingDetails
+                                    )
+                                    OutlinedTextField(
+                                        value = editPhone,
+                                        onValueChange = { editPhone = it },
+                                        label = { Text(stringResource(R.string.create_listing_phone)) },
+                                        singleLine = true,
+                                        enabled = !uiState.isSavingDetails
+                                    )
+                                }
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    enabled = !uiState.isSavingDetails,
+                                    onClick = {
+                                        viewModel.updateListingDetails(
+                                            title = editTitle,
+                                            description = editDescription,
+                                            priceText = editPrice,
+                                            location = editLocation,
+                                            phone = editPhone
+                                        )
+                                    }
+                                ) {
+                                    Text(
+                                        if (uiState.isSavingDetails) {
+                                            stringResource(R.string.listing_saving)
+                                        } else {
+                                            stringResource(R.string.done)
+                                        }
+                                    )
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(
+                                    enabled = !uiState.isSavingDetails,
+                                    onClick = {
+                                        showEditDialog = false
+                                    }
+                                ) {
+                                    Text(stringResource(R.string.listing_action_cancel))
+                                }
+                            }
+                        )
+                    }
+
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -341,13 +517,24 @@ fun ListingDetailScreen(
                         }
                     }
 
-                    // Map section — shown when coordinates are available
+                    val mapQuery = when {
+                        !listing.address.isNullOrBlank() -> listing.address
+                        listing.location.isNotBlank() -> listing.location
+                        else -> null
+                    }
+
+                    // Map section: exact pin when coordinates exist, otherwise query fallback.
                     listing.coordinates?.let { coords ->
                         MapSection(
                             lat = coords.lat,
                             lng = coords.lng,
                             address = listing.address,
                             title = listing.title,
+                            context = context
+                        )
+                    } ?: mapQuery?.let { query ->
+                        MapFallbackSection(
+                            query = query,
                             context = context
                         )
                     }
@@ -430,6 +617,140 @@ fun ListingDetailScreen(
                             )
                         }
                     }
+
+                }
+            }
+
+            if (uiState.canEditListing) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(Color.White)
+                        .padding(14.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.listing_manage_photos_title),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color(0xFF0F2240),
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Text(
+                        text = stringResource(R.string.listing_manage_photos_hint),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color(0xFF6B7FA3)
+                    )
+
+                    ActionPillButton(
+                        text = stringResource(R.string.listing_edit_details),
+                        icon = Icons.Default.ChevronRight,
+                        onClick = { showEditDialog = true }
+                    )
+
+                    if (editableImageUrls.isNotEmpty()) {
+                        LazyRow(
+                            contentPadding = PaddingValues(vertical = 2.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(editableImageUrls) { imageUrl ->
+                                Box {
+                                    AsyncImage(
+                                        model = imageUrl,
+                                        contentDescription = listing.title,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier
+                                            .size(90.dp)
+                                            .clip(RoundedCornerShape(10.dp))
+                                    )
+
+                                    CircleIconButton(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = stringResource(R.string.listing_remove_photo),
+                                        modifier = Modifier
+                                            .align(Alignment.TopEnd)
+                                            .offset(x = 8.dp, y = (-8).dp),
+                                        onClick = { editableImageUrls.remove(imageUrl) }
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    if (pendingImageUris.isNotEmpty()) {
+                        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            items(pendingImageUris) { uri ->
+                                Box {
+                                    AsyncImage(
+                                        model = uri,
+                                        contentDescription = listing.title,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier
+                                            .size(90.dp)
+                                            .clip(RoundedCornerShape(10.dp))
+                                    )
+
+                                    CircleIconButton(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = stringResource(R.string.listing_remove_photo),
+                                        modifier = Modifier
+                                            .align(Alignment.TopEnd)
+                                            .offset(x = 8.dp, y = (-8).dp),
+                                        onClick = { pendingImageUris.remove(uri) }
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        ActionPillButton(
+                            modifier = Modifier.weight(1f),
+                            text = stringResource(R.string.listing_add_more_photos),
+                            icon = Icons.Default.AddPhotoAlternate,
+                            onClick = { imagePicker.launch("image/*") }
+                        )
+
+                        ActionPillButton(
+                            modifier = Modifier.weight(1f),
+                            text = if (uiState.isSavingImages) {
+                                stringResource(R.string.listing_saving_photos)
+                            } else {
+                                stringResource(R.string.listing_save_photos)
+                            },
+                            icon = Icons.AutoMirrored.Filled.Send,
+                            enabled = !uiState.isSavingImages,
+                            onClick = {
+                                val files = pendingImageUris.mapNotNull { uri ->
+                                    uriToTempJpeg(context, uri)
+                                }
+                                viewModel.updateListingImages(
+                                    keepImageUrls = editableImageUrls.toList(),
+                                    newImageFiles = files
+                                )
+                            }
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(18.dp))
+            }
+        }
+
+        LaunchedEffect(ownerAction, uiState.canEditListing, hasHandledOwnerAction) {
+            if (!uiState.canEditListing || hasHandledOwnerAction) return@LaunchedEffect
+            when (ownerAction) {
+                "details" -> {
+                    showEditDialog = true
+                    hasHandledOwnerAction = true
+                }
+
+                "photos" -> {
+                    delay(120)
+                    contentScrollState.animateScrollTo(contentScrollState.maxValue)
+                    hasHandledOwnerAction = true
                 }
             }
         }
@@ -494,7 +815,114 @@ fun ListingDetailScreen(
                 }
             )
         }
+
+        if (showImageViewer && imageUrls.isNotEmpty()) {
+            Dialog(onDismissRequest = { showImageViewer = false }) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.92f))
+                ) {
+                    AsyncImage(
+                        model = imageUrls[imageViewerIndex.coerceIn(0, imageUrls.lastIndex)],
+                        contentDescription = listing.title,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.Center)
+                    )
+
+                    CircleIconButton(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = stringResource(R.string.ui_back),
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(16.dp),
+                        onClick = { showImageViewer = false }
+                    )
+
+                    if (imageUrls.size > 1) {
+                        CircleIconButton(
+                            imageVector = Icons.Default.ChevronLeft,
+                            contentDescription = stringResource(R.string.listing_prev_image),
+                            modifier = Modifier
+                                .align(Alignment.CenterStart)
+                                .padding(start = 8.dp),
+                            onClick = {
+                                imageViewerIndex = if (imageViewerIndex == 0) imageUrls.lastIndex else imageViewerIndex - 1
+                            }
+                        )
+
+                        CircleIconButton(
+                            imageVector = Icons.Default.ChevronRight,
+                            contentDescription = stringResource(R.string.listing_next_image),
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .padding(end = 8.dp),
+                            onClick = {
+                                imageViewerIndex = if (imageViewerIndex == imageUrls.lastIndex) 0 else imageViewerIndex + 1
+                            }
+                        )
+                    }
+                }
+            }
+        }
     }
+}
+
+private fun localizeListingDetailMessage(context: Context, message: String): String {
+    return when (message) {
+        "Title must be at least 5 characters" -> context.getString(R.string.msg_title_min_5)
+        "Description must be at least 20 characters" -> context.getString(R.string.msg_description_min_20)
+        "Phone number looks too short" -> context.getString(R.string.msg_phone_too_short)
+        "Price is required" -> context.getString(R.string.msg_price_required)
+        "Location is required" -> context.getString(R.string.msg_location_required)
+        "Failed to load listing" -> context.getString(R.string.msg_failed_load_listing)
+        "Failed to update listing images" -> context.getString(R.string.msg_failed_update_listing_images)
+        "Failed to update listing" -> context.getString(R.string.msg_failed_update_listing)
+        "Failed to update favorite" -> context.getString(R.string.msg_failed_update_favorite)
+        "Failed to block user" -> context.getString(R.string.msg_failed_block_user)
+        "Failed to report listing" -> context.getString(R.string.msg_failed_report_listing)
+        "Listing updated" -> context.getString(R.string.msg_listing_updated)
+        "Listing images updated" -> context.getString(R.string.msg_listing_images_updated)
+        else -> message
+    }
+}
+
+@Composable
+private fun ActionPillButton(
+    modifier: Modifier = Modifier,
+    text: String,
+    icon: ImageVector,
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(999.dp))
+            .background(if (enabled) Color(0xFF0A4F66) else Color(0xFF90A4AE))
+            .clickable(enabled = enabled, onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 10.dp)
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(icon, contentDescription = null, tint = Color.White)
+            Spacer(modifier = Modifier.width(6.dp))
+            Text(text = text, color = Color.White, style = MaterialTheme.typography.labelLarge)
+        }
+    }
+}
+
+private fun uriToTempJpeg(context: Context, uri: Uri): File? {
+    return runCatching {
+        val bytes = context.contentResolver.openInputStream(uri)?.use { it.readBytes() } ?: return null
+        val file = File.createTempFile("listing-edit-image-", ".jpg", context.cacheDir)
+        file.writeBytes(bytes)
+        file
+    }.getOrNull()
 }
 
 @Composable
@@ -517,6 +945,7 @@ private fun CircleIconButton(
     imageVector: ImageVector,
     contentDescription: String,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     highlighted: Boolean = false
 ) {
     val backgroundColor = if (highlighted) Color(0xFFFFF1F3) else Color.White.copy(alpha = 0.92f)
@@ -524,7 +953,7 @@ private fun CircleIconButton(
     val iconTint = if (highlighted) Color(0xFFB3261E) else Color(0xFF102A43)
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(46.dp)
             .shadow(elevation = 10.dp, shape = CircleShape)
             .clip(CircleShape)
@@ -726,6 +1155,69 @@ private fun MapSection(
 }
 
 @Composable
+private fun MapFallbackSection(
+    query: String,
+    context: android.content.Context
+) {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 20.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.Map,
+                contentDescription = null,
+                tint = Color(0xFF1A4D7C),
+                modifier = Modifier.size(16.dp)
+            )
+            Text(
+                text = stringResource(R.string.listing_location_title),
+                style = MaterialTheme.typography.titleMedium,
+                color = Color(0xFF0F2240),
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        Text(
+            text = stringResource(R.string.listing_location_estimated),
+            style = MaterialTheme.typography.bodySmall,
+            color = Color(0xFF6B7FA3)
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(14.dp))
+                .background(Color(0xFFE8F2FF))
+                .clickable {
+                    openLocationQueryInMaps(context, query)
+                }
+                .padding(horizontal = 16.dp, vertical = 13.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.Map,
+                contentDescription = null,
+                tint = Color(0xFF1A4D7C),
+                modifier = Modifier.size(16.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = stringResource(R.string.listing_open_location),
+                style = MaterialTheme.typography.labelLarge,
+                color = Color(0xFF1A4D7C),
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+    }
+}
+
+@Composable
 private fun listingDetailCategoryLabel(categoryId: String): String {
     val normalizedCategoryId = categoryId
         .trim()
@@ -761,7 +1253,8 @@ private fun listingDetailCategoryLabel(categoryId: String): String {
 }
 
 private fun openLocationInMaps(context: Context, lat: Double, lng: Double, title: String) {
-    val geoIntent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:$lat,$lng?q=$lat,$lng($title)"))
+    val encodedTitle = Uri.encode(title)
+    val geoIntent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:$lat,$lng?q=$lat,$lng($encodedTitle)"))
         .setPackage("com.google.android.apps.maps")
 
     try {
@@ -769,6 +1262,20 @@ private fun openLocationInMaps(context: Context, lat: Double, lng: Double, title
     } catch (_: ActivityNotFoundException) {
         context.startActivity(
             Intent(Intent.ACTION_VIEW, Uri.parse("https://maps.google.com/?q=$lat,$lng"))
+        )
+    }
+}
+
+private fun openLocationQueryInMaps(context: Context, query: String) {
+    val encodedQuery = Uri.encode(query)
+    val geoIntent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=$encodedQuery"))
+        .setPackage("com.google.android.apps.maps")
+
+    try {
+        context.startActivity(geoIntent)
+    } catch (_: ActivityNotFoundException) {
+        context.startActivity(
+            Intent(Intent.ACTION_VIEW, Uri.parse("https://maps.google.com/?q=$encodedQuery"))
         )
     }
 }

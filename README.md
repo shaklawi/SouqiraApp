@@ -63,6 +63,12 @@ open Souqira.xcworkspace
 
 5. Build and run!
 
+## Run On iPhone
+
+To run the app on a physical device (recommended for Google Sign-In testing), follow:
+
+- `RUN_ON_IPHONE.md`
+
 ## Configuration
 
 ### Google Sign In Setup
